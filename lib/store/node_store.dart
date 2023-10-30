@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:go_grape_ui/api/port.dart';
-import 'package:go_grape_ui/model/port/datum.dart';
-import '../model/port/port_list.dart';
+import 'package:go_grape_ui/api/node.dart';
+import '../model/node/datum.dart';
+import '../model/node/node.dart';
 import '../utils/request/services.dart';
 
-class PortStore extends ChangeNotifier {
-  PortList? _data;
-  PortList? get data => _data; // 列表数据
-  set data(PortList? data) {
+class NodeStore extends ChangeNotifier {
+  Node? _data;
+  Node? get data => _data; // 列表数据
+  set data(Node? data) {
     _data = data;
     notifyListeners();
   }
@@ -27,7 +27,7 @@ class PortStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  PortStore();
+  NodeStore();
 
   // 长度
   int len() {
@@ -45,31 +45,25 @@ class PortStore extends ChangeNotifier {
   // 添加端口号信息
   Future<void> create() async {
     if (DioSingleton.baseUrl == '') return;
-    await PortApi.createPort(createData);
+    await NodeApi.createNode(createData);
   }
 
   // 获取列表
   Future<void> list() async {
     if (DioSingleton.baseUrl == '') return;
-    var res = await PortApi.list(null);
+    var res = await NodeApi.getList();
     data = res;
   }
 
   // 修改信息
   Future<void> modify() async {
     if (DioSingleton.baseUrl == '') return;
-    await PortApi.modify(modifyData);
+    await NodeApi.modify(modifyData);
   }
 
   // 删除信息
   Future<void> delete(String id) async {
     if (DioSingleton.baseUrl == '') return;
-    await PortApi.delete(id);
-  }
-
-  // 修改状态
-  Future<void> modifyState(String id) async {
-    if (DioSingleton.baseUrl == '') return;
-    await PortApi.modifyState(id);
+    await NodeApi.delete(id);
   }
 }

@@ -5,10 +5,9 @@ import 'package:go_grape_ui/components/custom_button.dart';
 import 'package:go_grape_ui/components/custom_divider.dart';
 import 'package:go_grape_ui/components/custom_form_text_field.dart';
 import 'package:go_grape_ui/components/custom_group_radio.dart';
-import 'package:go_grape_ui/components/custom_select.dart';
 import 'package:go_grape_ui/components/default_button.dart';
-import 'package:go_grape_ui/model/port_list/datum.dart';
-import 'package:go_grape_ui/store/port_store.dart';
+import 'package:go_grape_ui/model/port/datum.dart';
+import 'package:go_grape_ui/store/node_store.dart';
 import 'package:go_grape_ui/utils/app_theme.dart';
 import 'package:provider/provider.dart';
 
@@ -19,12 +18,10 @@ class NodeDialog extends StatefulWidget {
     required this.tag,
     required this.title,
     this.data,
-    this.operationType = 0,
   });
   String tag;
   String title;
   Datum? data;
-  int operationType; // 0 添加 1 编辑
 
   @override
   State<NodeDialog> createState() => _NodeDialogState();
@@ -32,6 +29,7 @@ class NodeDialog extends StatefulWidget {
 
 class _NodeDialogState extends State<NodeDialog> {
   final TextEditingController _name = TextEditingController();
+  final TextEditingController _target = TextEditingController();
   final TextEditingController _mark = TextEditingController();
   int nodeType = 0;
 
@@ -39,12 +37,12 @@ class _NodeDialogState extends State<NodeDialog> {
 
   @override
   Widget build(BuildContext context) {
+    var node = Provider.of<NodeStore>(context);
+
     if (widget.data != null) {
       _name.text = widget.data!.port.toString();
       _mark.text = widget.data!.mark!;
     }
-
-    var portStore = Provider.of<PortStore>(context);
 
     return Container(
       height: 420,
@@ -80,8 +78,8 @@ class _NodeDialogState extends State<NodeDialog> {
               children: [
                 _item('节点名称', _name, '请填写节点名称', true),
                 _itemGroupRadio(),
-                _item('目标地址', _name, '请填写目标地址', true),
-                _item('备　注', _mark, '请填写备注', true),
+                _item('目标地址', _target, '请填写目标地址', true),
+                _item('备　注', _mark, '请填写备注', true, line: 3),
               ],
             ),
           ),
@@ -100,14 +98,12 @@ class _NodeDialogState extends State<NodeDialog> {
                 name: '确定',
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    if (widget.operationType == 0) {
-                      // Datum portData = Datum();
-                      // portData.port = int.parse(_port.text);
-                      // portData.mark = _mark.text;
-                      // portStore.data = portData;
-
-                      // portStore.createData = portData;
-                      // await portStore.createPort();
+                    if (node.operationType == 0) {
+                      node.createData.name = _name.text;
+                      node.createData.nodeType = nodeType;
+                      node.createData.target = _target.text;
+                      node.createData.mark = _mark.text;
+                      await node.create();
                       await SmartDialog.dismiss(tag: widget.tag, result: true);
                     }
                   }
@@ -140,7 +136,7 @@ class _NodeDialogState extends State<NodeDialog> {
   }
 
   _item(
-      String name, TextEditingController control, String hint, bool isHaveTo) {
+      String name, TextEditingController control, String hint, bool isHaveTo, {int line = 1}) {
     return Row(
       children: [
         const SizedBox(width: 30),
@@ -151,6 +147,7 @@ class _NodeDialogState extends State<NodeDialog> {
             titleWidth: 65,
             hintText: hint,
             isHaveTo: isHaveTo,
+            lines: line,
           ),
         ),
         const SizedBox(width: 30),
@@ -162,21 +159,23 @@ class _NodeDialogState extends State<NodeDialog> {
 Future<bool> addNode() async {
   var result = await SmartDialog.show(
     clickMaskDismiss: false,
-    tag: 'add_repo',
+    tag: 'add_node',
     builder: (context) {
-      return NodeDialog(tag: 'add_repo', title: '添加节点信息');
+      return NodeDialog(tag: 'add_node', title: '添加节点信息');
     },
   );
 
   return result;
 }
 
-Future<bool> editNode(Datum data) async {
+Future<bool> editNode() async {
   var result = await SmartDialog.show(
     clickMaskDismiss: false,
-    tag: 'edit_repo',
+    tag: 'edit_node',
     builder: (context) {
-      return NodeDialog(tag: 'edit_repo', title: '修改节点信息', data: data);
+      var node = Provider.of<NodeStore>(context);
+      node.operationType = 1;
+      return NodeDialog(tag: 'edit_node', title: '修改节点信息');
     },
   );
 

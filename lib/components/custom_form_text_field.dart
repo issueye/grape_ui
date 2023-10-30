@@ -12,6 +12,7 @@ class CustomFormTextField extends StatefulWidget {
     this.titleWidth = 40,
     this.height = 70,
     this.isHaveTo = false,
+    this.lines = 1,
   }) : super(key: key);
   final TextEditingController controller;
   IconData? suffixIcon;
@@ -20,6 +21,7 @@ class CustomFormTextField extends StatefulWidget {
   double titleWidth;
   double height;
   bool isHaveTo;
+  int lines;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -28,6 +30,7 @@ class CustomFormTextField extends StatefulWidget {
 
 class _CustomFormTextFieldState extends State<CustomFormTextField> {
   final FocusNode _focusNode = FocusNode();
+  final padding = const EdgeInsets.symmetric(vertical: 12, horizontal: 8);
   Color search = AppTheme.enabledColor;
 
   @override
@@ -52,12 +55,11 @@ class _CustomFormTextFieldState extends State<CustomFormTextField> {
     super.dispose();
   }
 
+  // 边框
   OutlineInputBorder _getBorder(Color color) {
     return OutlineInputBorder(
       gapPadding: 0,
-      borderSide: BorderSide(
-        color: color,
-      ),
+      borderSide: BorderSide(color: color),
       borderRadius: AppTheme.mainRadius,
     );
   }
@@ -70,12 +72,14 @@ class _CustomFormTextFieldState extends State<CustomFormTextField> {
         children: [
           Expanded(
             child: TextFormField(
+              maxLines: widget.lines,
               cursorColor: AppTheme.mainColor,
               focusNode: _focusNode,
               controller: widget.controller,
               // 内容的字体
               style: AppTheme.defaultTextStyle,
               decoration: InputDecoration(
+                // 前置标题
                 icon: SizedBox(
                   width: widget.titleWidth,
                   child: Row(
@@ -86,17 +90,16 @@ class _CustomFormTextFieldState extends State<CustomFormTextField> {
                     ],
                   ),
                 ),
-                // isDense: true,
                 isCollapsed: true,
                 // 内容内边距
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                hintText: widget.hintText,
+                contentPadding: padding,
                 // 提示文字
+                hintText: widget.hintText,
                 hintStyle: const TextStyle(
                   color: AppTheme.hintColor,
                   fontSize: AppTheme.defaultFontSize,
                 ),
+                // 边框
                 border: _getBorder(AppTheme.mainColor), // 边框
                 focusedBorder: _getBorder(AppTheme.mainColor), // 聚焦时的边框
                 enabledBorder: _getBorder(AppTheme.enabledColor), // 失去焦点时的边框

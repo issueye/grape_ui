@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:go_grape_ui/components/bar_button.dart';
 import 'package:go_grape_ui/pages/port/node_dialog.dart';
+import 'package:go_grape_ui/store/node_store.dart';
+import 'package:go_grape_ui/utils/app_theme.dart';
+import 'package:provider/provider.dart';
 
 import '../../components/custom_button.dart';
 import '../../components/custom_text_field.dart';
+import '../../components/message_dialog.dart';
 import 'node_table.dart';
 
 class NodeMana extends StatefulWidget {
@@ -15,17 +20,63 @@ class NodeMana extends StatefulWidget {
 class _NodeManaState extends State<NodeMana> {
   final TextEditingController _qryControl = TextEditingController();
 
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+
   final List<FieldInfo> fieldList = [
-    FieldInfo(name: '名称', width: 100),
-    FieldInfo(name: '类型', width: 50),
-    FieldInfo(name: '目标地址'),
-    FieldInfo(name: '页面地址'),
-    FieldInfo(name: '备注'),
-    FieldInfo(name: '操作', width: 100),
+    FieldInfo(title: '名称', name: 'name', width: 100),
+    FieldInfo(
+      title: '类型',
+      name: 'nodeType',
+      width: 60,
+      titleCenter: true,
+      child: (ctx, index, value) {
+        var val = value as int;
+        return RawButton(
+          name: val == 0 ? '接口' : '页面',
+        );
+      },
+    ),
+    FieldInfo(title: '目标地址', name: 'target', clip: true),
+    FieldInfo(title: '备注', name: 'mark'),
+    FieldInfo(
+      title: '操作',
+      name: '操作',
+      width: 100,
+      titleCenter: true,
+      child: (ctx, index, value) {
+        var node = Provider.of<NodeStore>(ctx);
+        var data = node.data!.data![index];
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            BarButton(icon: Resources.edit, tipMessage: '编辑', onTap: () async {
+              await editNode();
+            }),
+            const SizedBox(width: 10),
+            BarButton(icon: Resources.delete, tipMessage: '删除', onTap: () async {
+              await showMessageBox(
+                      '删除', '''是否删除 ${data.name} ?''')
+                  .then((value) async {
+                if (value) {
+                  await node.delete(data.id!);
+                  await node.list();
+                }
+              });
+            }),
+          ],
+        );
+      },
+    ),
   ];
 
   @override
   Widget build(BuildContext context) {
+    var node = Provider.of<NodeStore>(context);
     return Container(
       padding: const EdgeInsets.all(10),
       child: Column(
@@ -45,25 +96,25 @@ class _NodeManaState extends State<NodeMana> {
               CustomButton(
                 name: '查询',
                 onPressed: () async {
-                  // await portStore.list();
+                  await node.list();
                 },
               ),
               const SizedBox(width: 10),
               CustomButton(
                 name: '添加',
                 onPressed: () async {
+                  node.operationType = 0;
                   var isOk = await addNode();
-                  // var isOk = await addPort();
-                  // if (isOk) {
-                  //   await portStore.list();
-                  // }
+                  if (isOk) {
+                    await node.list();
+                  }
                 },
               ),
             ],
           ),
           const SizedBox(height: 30),
           // 表格头部
-          NodeTable(fieldInfo: fieldList),
+          NodeTable(fieldInfo: fieldList, tableData: node.data, context: context),
           const Spacer(),
         ],
       ),

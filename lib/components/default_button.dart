@@ -23,8 +23,8 @@ class _PlainButtonState extends State<PlainButton> {
   Widget build(BuildContext context) {
     return OutlinedButton(
       style: ElevatedButton.styleFrom(
-        elevation: 0,
-        primary: widget.color,
+        elevation: 0, 
+        backgroundColor: widget.color,
         padding: AppTheme.defaultButtonPadding,
         textStyle: const TextStyle(
           fontSize: AppTheme.defaultFontSize,

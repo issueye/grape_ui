@@ -18,16 +18,16 @@ class Port extends StatefulWidget {
 class _PortState extends State<Port> {
   final TextEditingController _qryControl = TextEditingController();
 
-  late PortStore portStore = PortStore();
+  late PortStore port = PortStore();
 
   Future<void> _getRepoList() async {
-    await portStore.list();
+    await port.list();
   }
 
   @override
   void initState() {
     super.initState();
-    portStore = Provider.of<PortStore>(context, listen: false);
+    port = Provider.of<PortStore>(context, listen: false);
     _getRepoList();
   }
 
@@ -49,15 +49,16 @@ class _PortState extends State<Port> {
               const SizedBox(width: 10),
               CustomButton(
                   onPressed: () async {
-                    await portStore.list();
+                    await port.list();
                   },
                   name: '查询'),
               const SizedBox(width: 10),
               CustomButton(
                   onPressed: () async {
+                    port.operationType = 0;
                     var isOk = await addPort();
                     if (isOk) {
-                      await portStore.list();
+                      await port.list();
                     }
                   },
                   name: '添加'),
@@ -80,16 +81,15 @@ class _PortState extends State<Port> {
 
   _getPort() {
     return ListView.builder(
-        itemCount: portStore.data == null ? 0 : portStore.data!.data!.length,
+        itemCount: port.data == null ? 0 : port.data!.data!.length,
         itemBuilder: (context, index) {
-          var data = portStore.data!.data!;
+          var data = port.data!.data!;
           if (data.isNotEmpty) {
             return PortItem(
               data: data[index],
-              isSelect: portStore.selectIndex == index,
+              isSelect: port.selectIndex == index,
               onSelect: () {
-                portStore.selectIndex = index;
-                // repo.selectRepoId = data[index].id;
+                port.selectIndex = index;
               },
             );
           } else {

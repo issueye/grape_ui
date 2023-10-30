@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_grape_ui/components/custom_button.dart';
-import 'package:go_grape_ui/components/custom_divider.dart';
-import 'package:go_grape_ui/components/custom_form_text_field.dart';
 import 'package:go_grape_ui/pages/settings/server.dart';
-import 'package:go_grape_ui/utils/app_theme.dart';
 import 'package:go_grape_ui/utils/db/config.dart';
 
 class SettingsPage extends StatefulWidget {

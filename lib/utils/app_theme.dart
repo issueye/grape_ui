@@ -21,7 +21,7 @@ class AppTheme {
   static const double defaultWindowTitleHeight = 40; // 窗体标题高度
 
   // 字体
-  static const double defaultFontSize = 14; // 字体大小
+  static const double defaultFontSize = 12; // 字体大小
   static const double fontSize_15 = 15; // 字体大小
   static const double fontSize_16 = 16; // 字体大小
   static const double fontSize_17 = 17; // 字体大小
@@ -36,6 +36,7 @@ class AppTheme {
     toolbarHeight: AppTheme.defaultAppBarHeight,
     titleTextStyle: TextStyle(
       fontSize: AppTheme.defaultFontSize,
+      fontWeight: defaultFontWeight,
       fontFamily: AppTheme.defaultFontFamily,
     ),
     backgroundColor: AppTheme.mainColor,
@@ -47,11 +48,11 @@ class AppTheme {
     color: AppTheme.defaultContentTextColor,
   );
 
-  static TextStyle sizeTextStyle(double size) {
+  static TextStyle sizeTextStyle(double size, {Color color = AppTheme.defaultContentTextColor}) {
     return TextStyle(
       fontSize: size,
       fontFamily: AppTheme.defaultFontFamily,
-      color: AppTheme.defaultContentTextColor,
+      color: color,
     );
   }
 
@@ -81,6 +82,7 @@ class Resources {
   static SvgPicture stop({Color color = AppTheme.dangerColor}) {
     return SvgPicture.asset(
       'assets/svg/stop.svg',
+      // ignore: deprecated_member_use
       color: color,
     );
   }
@@ -88,6 +90,7 @@ class Resources {
   static SvgPicture start({Color color = AppTheme.successColor}) {
     return SvgPicture.asset(
       'assets/svg/start.svg',
+      // ignore: deprecated_member_use
       color: color,
     );
   }

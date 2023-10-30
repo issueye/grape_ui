@@ -2,6 +2,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_grape_ui/init/index.dart';
 import 'package:go_grape_ui/router/index.dart';
 import 'package:flutter/material.dart';
+import 'package:go_grape_ui/store/node_store.dart';
 import 'package:go_grape_ui/store/port_store.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<PortStore>(create: (_) => PortStore()),
+        ChangeNotifierProvider<NodeStore>(create: (_) => NodeStore()),
       ],
       child: MaterialApp.router(
         title: 'Flutter Demo',

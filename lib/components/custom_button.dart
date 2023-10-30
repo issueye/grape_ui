@@ -24,7 +24,7 @@ class _CustomButtonState extends State<CustomButton> {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         elevation: 0,
-        primary: widget.color,
+        backgroundColor: widget.color,
         padding: AppTheme.defaultButtonPadding,
         textStyle: const TextStyle(
           fontSize: AppTheme.defaultFontSize,
@@ -77,14 +77,17 @@ class _WarnButtonState extends State<WarnButton> {
 }
 
 class RawButton extends StatefulWidget {
-  const RawButton(
-      {super.key,
-      required this.name,
-      this.onPressed,
-      this.color = AppTheme.mainColor});
+  const RawButton({
+    super.key,
+    required this.name,
+    this.onPressed,
+    this.color = AppTheme.mainColor,
+    this.height = 16,
+  });
   final Function()? onPressed;
   final String name;
   final Color color;
+  final double height;
 
   @override
   State<RawButton> createState() => _RawButtonState();
@@ -94,25 +97,17 @@ class _RawButtonState extends State<RawButton> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 16,
+      height: widget.height,
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(widget.color), // 背景颜色
-          foregroundColor: MaterialStateProperty.all(Colors.white), // 字体颜色
-          overlayColor: MaterialStateProperty.all(widget.color), // 高亮颜色
-          shadowColor: MaterialStateProperty.all(widget.color), // 阴影颜色
-          elevation: MaterialStateProperty.all(0), // 阴影值
-          textStyle: MaterialStateProperty.all(const TextStyle(
-              fontSize: 11, fontFamily: AppTheme.defaultFontFamily)),
-          shape: MaterialStateProperty.all(
-            BeveledRectangleBorder(
-              borderRadius: BorderRadius.circular(0),
-            ),
-          ),
-          padding: MaterialStateProperty.all(
-              const EdgeInsetsDirectional.symmetric(
-                  horizontal: 2, vertical: 1)), //
-        ),
+            backgroundColor: MaterialStateProperty.all(widget.color), // 背景颜色
+            foregroundColor: MaterialStateProperty.all(Colors.white), // 字体颜色
+            overlayColor: MaterialStateProperty.all(widget.color), // 高亮颜色
+            shadowColor: MaterialStateProperty.all(widget.color), // 阴影颜色
+            elevation: MaterialStateProperty.all(0), // 阴影值
+            textStyle: MaterialStateProperty.all(AppTheme.defaultTextStyle),
+            shape: MaterialStateProperty.all(BeveledRectangleBorder(borderRadius: BorderRadius.circular(2))),
+            padding: MaterialStateProperty.all(const EdgeInsetsDirectional.symmetric(horizontal: 1, vertical: 1))),
         onPressed: widget.onPressed,
         child: Text(widget.name),
       ),

@@ -25,7 +25,7 @@ class ApiInterceptor extends Interceptor {
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) {
+  void onError(DioException err, ErrorInterceptorHandler handler) {
     // 在请求发生错误时的处理
     // 可以在此处处理错误信息、错误状态码等
 

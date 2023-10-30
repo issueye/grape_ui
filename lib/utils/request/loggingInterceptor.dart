@@ -35,7 +35,7 @@ class LoggingInterceptor extends Interceptor {
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) {
+  void onError(DioException err, ErrorInterceptorHandler handler) {
     final Logger logger = Logger('dio-error');
     logger.severe('Error: ${err.message} ${err.requestOptions.uri}');
     super.onError(err, handler);

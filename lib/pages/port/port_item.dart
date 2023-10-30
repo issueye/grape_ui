@@ -6,7 +6,7 @@ import 'package:go_grape_ui/utils/app_theme.dart';
 import 'package:provider/provider.dart';
 
 import '../../components/message_dialog.dart';
-import '../../model/port_list/datum.dart';
+import '../../model/port/datum.dart';
 
 class PortItem extends StatefulWidget {
   const PortItem(
@@ -136,7 +136,7 @@ class _PortItemState extends State<PortItem> {
           icon: widget.data.state! ? Resources.stop() : Resources.start(),
           tipMessage: widget.data.state! ? '使用中，点击停用' : '停用中，点击启用',
           onTap: () async {
-            await editPort(widget.data);
+            // await editPort();
           },
         ),
         const SizedBox(width: 10),
@@ -144,7 +144,10 @@ class _PortItemState extends State<PortItem> {
           icon: Resources.edit,
           tipMessage: '编辑',
           onTap: () async {
-            await editPort(widget.data);
+            port.operationType = 1;
+            port.modifyData = widget.data;
+            await editPort();
+            await port.list();
           },
         ),
         const SizedBox(width: 10),
@@ -152,13 +155,12 @@ class _PortItemState extends State<PortItem> {
             icon: Resources.delete,
             tipMessage: '删除',
             onTap: () async {
-              await showMessageBox('删除', '''
-是否删除 ${widget.data.port.toString()} ?
-''').then((value) async {
-                debugPrint('then -> $value');
+              await showMessageBox(
+                      '删除', '''是否删除 ${widget.data.port.toString()} ?''')
+                  .then((value) async {
                 if (value) {
-                  // await port.removeDataById(widget.data.id!);
-                  // await port.getRepoList();
+                  await port.delete(widget.data.id!);
+                  await port.list();
                 }
               });
             }),

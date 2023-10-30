@@ -1,5 +1,5 @@
-import 'package:go_grape_ui/model/port_list/datum.dart';
-import 'package:go_grape_ui/model/port_list/port_list.dart';
+import 'package:go_grape_ui/model/port/datum.dart';
+import 'package:go_grape_ui/model/port/port_list.dart';
 import '../model/res_message.dart';
 import '../utils/request/services.dart';
 
