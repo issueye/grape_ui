@@ -30,12 +30,28 @@ class _NodeManaState extends State<NodeMana> {
     FieldInfo(
       title: '类型',
       name: 'nodeType',
-      width: 60,
+      width: 80,
       titleCenter: true,
       child: (ctx, index, value) {
         var val = value as int;
-        return RawButton(
-          name: val == 0 ? '接口' : '页面',
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+          child: Container(
+            width: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(2),
+              color: val == 0
+                  ? AppTheme.successColor.withOpacity(0.8)
+                  : AppTheme.warnColor.withOpacity(0.8),
+            ),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                val == 0 ? '接口' : '页面',
+                style: AppTheme.sizeTextStyle(10, color: Colors.white),
+              ),
+            ),
+          ),
         );
       },
     ),
@@ -105,7 +121,7 @@ class _NodeManaState extends State<NodeMana> {
               CustomButton(
                 name: '查询',
                 onPressed: () async {
-                  await node.list();
+                  await node.list(condition: _qryControl.text);
                 },
               ),
               const SizedBox(width: 10),
@@ -122,17 +138,18 @@ class _NodeManaState extends State<NodeMana> {
             ],
           ),
           const SizedBox(height: 30),
-          Consumer<NodeStore>(
-            builder: (context, value, child) {
-              // 表格头部
-              return NodeTable(
-                fieldInfo: fieldList,
-                tableData: node.data,
-                context: context,
-              ); 
-            },
+          Expanded(
+            child: Consumer<NodeStore>(
+              builder: (context, value, child) {
+                // 表格头部
+                return NodeTable(
+                  fieldInfo: fieldList,
+                  tableData: node.data,
+                  context: context,
+                );
+              },
+            ),
           ),
-          const Spacer(),
         ],
       ),
     );

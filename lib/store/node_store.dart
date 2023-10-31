@@ -17,8 +17,7 @@ class NodeStore extends ChangeNotifier {
   set portId(String id) {
     _portId = id;
     list();
-  } 
-
+  }
 
   // 创建数据
   Datum createData = Datum();
@@ -58,9 +57,11 @@ class NodeStore extends ChangeNotifier {
   }
 
   // 获取列表
-  Future<void> list() async {
+  Future<void> list({String? condition}) async {
     if (DioSingleton.baseUrl == '') return;
-    var res = await NodeApi.getList(params: {'portId': _portId});
+    var res = await NodeApi.getList(
+      params: {'portId': _portId, 'condition': condition},
+    );
     data = res;
   }
 

@@ -42,7 +42,7 @@ class _NodeDialogState extends State<NodeDialog> {
     var port = Provider.of<PortStore>(context);
 
     if (node.operationType == 1) {
-      _name.text = node.modifyData.name!.toString();
+      _name.text = node.modifyData.name!;
       _target.text = node.modifyData.target!;
       _mark.text = node.modifyData.mark!;
       nodeType = node.modifyData.nodeType!;
@@ -141,16 +141,19 @@ class _NodeDialogState extends State<NodeDialog> {
             items: const ['接口', '页面'],
             title: '节点类型',
             titleWidth: 65,
-            selectItem: nodeType,
             isHaveTo: true,
+            group: nodeType,
+            onChanged: (val) {
+              nodeType = val!;
+            },
           ),
         ),
       ],
     );
   }
 
-  _item(
-      String name, TextEditingController control, String hint, bool isHaveTo, {int line = 1}) {
+  _item(String name, TextEditingController control, String hint, bool isHaveTo,
+      {int line = 1}) {
     return Row(
       children: [
         const SizedBox(width: 30),
@@ -187,8 +190,6 @@ Future<bool> editNode() async {
     clickMaskDismiss: false,
     tag: 'edit_node',
     builder: (context) {
-      var node = Provider.of<NodeStore>(context);
-      node.operationType = 1;
       return NodeDialog(tag: 'edit_node', title: '修改节点信息');
     },
   );

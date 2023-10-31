@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
                     width: 400,
                     height: AppTheme.defaultAppBarHeight,
                     child: Row(
-                      children: const [
+                      children: [
                         Spacer(),
                         Exit2Button(),
                       ],

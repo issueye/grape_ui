@@ -48,7 +48,7 @@ class _NodeTableState extends State<NodeTable> {
     _getTableBody();
 
     return SizedBox(
-      height: 450,
+      // height: 450,
       child: Column(
         children: [
           Row(children: _getHeader()),
@@ -57,9 +57,7 @@ class _NodeTableState extends State<NodeTable> {
             child: Consumer<NodeStore>(
               builder: (context, value, child) {
                 if (rows.isEmpty) {
-                  return Expanded(
-                    child: rows[0],
-                  );
+                  return const Text('没有数据', style: AppTheme.defaultTextStyle);
                 }
 
                 return ListView.builder(
@@ -79,7 +77,8 @@ class _NodeTableState extends State<NodeTable> {
   _getTableBody() {
     rows.clear();
     if (widget.tableData == null) {
-      rows.add(const Center(child: Text('没有数据', style: AppTheme.defaultTextStyle)));
+      rows.add(
+          const Center(child: Text('没有数据', style: AppTheme.defaultTextStyle)));
       return rows;
     }
 

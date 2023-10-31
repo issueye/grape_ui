@@ -6,20 +6,22 @@ class CustomGroupRadio extends StatefulWidget {
   CustomGroupRadio({
     super.key,
     required this.items,
-    this.selectItem,
     this.title = '',
     this.height = 70,
     this.errorInfo,
     this.titleWidth = 40,
     this.isHaveTo = false,
+    this.group = -1,
+    required this.onChanged,
   });
   final List<String> items; // 项目
   final double height; // 高度
   final String? errorInfo; // 提示文字
-  int? selectItem; // 选择的文字
   bool isHaveTo; //
   final String title; // 标题名称
   double titleWidth;
+  int? group;
+  Function(int?) onChanged;
 
   @override
   State<CustomGroupRadio> createState() => _CustomGroupRadioState();
@@ -42,10 +44,11 @@ class _CustomGroupRadioState extends State<CustomGroupRadio> {
           Radio(
             splashRadius: 3,
             value: value,
-            groupValue: widget.selectItem,
+            groupValue: widget.group,
             onChanged: (val) {
               setState(() {
-                widget.selectItem = val;
+                widget.group = val;
+                widget.onChanged(val);
               });
             },
           ),
