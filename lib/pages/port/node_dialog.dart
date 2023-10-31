@@ -8,6 +8,7 @@ import 'package:go_grape_ui/components/custom_group_radio.dart';
 import 'package:go_grape_ui/components/default_button.dart';
 import 'package:go_grape_ui/model/port/datum.dart';
 import 'package:go_grape_ui/store/node_store.dart';
+import 'package:go_grape_ui/store/port_store.dart';
 import 'package:go_grape_ui/utils/app_theme.dart';
 import 'package:provider/provider.dart';
 
@@ -38,10 +39,13 @@ class _NodeDialogState extends State<NodeDialog> {
   @override
   Widget build(BuildContext context) {
     var node = Provider.of<NodeStore>(context);
+    var port = Provider.of<PortStore>(context);
 
-    if (widget.data != null) {
-      _name.text = widget.data!.port.toString();
-      _mark.text = widget.data!.mark!;
+    if (node.operationType == 1) {
+      _name.text = node.modifyData.name!.toString();
+      _target.text = node.modifyData.target!;
+      _mark.text = node.modifyData.mark!;
+      nodeType = node.modifyData.nodeType!;
     }
 
     return Container(
@@ -99,11 +103,21 @@ class _NodeDialogState extends State<NodeDialog> {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     if (node.operationType == 0) {
+                      node.createData.portId = port.selectData.id;
                       node.createData.name = _name.text;
                       node.createData.nodeType = nodeType;
                       node.createData.target = _target.text;
                       node.createData.mark = _mark.text;
                       await node.create();
+                      await SmartDialog.dismiss(tag: widget.tag, result: true);
+                    }
+
+                    if (node.operationType == 1) {
+                      node.modifyData.name = _name.text;
+                      node.modifyData.nodeType = nodeType;
+                      node.modifyData.target = _target.text;
+                      node.modifyData.mark = _mark.text;
+                      await node.modify();
                       await SmartDialog.dismiss(tag: widget.tag, result: true);
                     }
                   }

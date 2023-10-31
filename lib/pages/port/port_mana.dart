@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_grape_ui/components/custom_button.dart';
 import 'package:go_grape_ui/components/custom_text_field.dart';
 import 'package:go_grape_ui/pages/port/port_item.dart';
+import 'package:go_grape_ui/store/node_store.dart';
 import 'package:go_grape_ui/store/port_store.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +20,7 @@ class _PortState extends State<Port> {
   final TextEditingController _qryControl = TextEditingController();
 
   late PortStore port = PortStore();
+  late NodeStore node = NodeStore();
 
   Future<void> _getRepoList() async {
     await port.list();
@@ -28,6 +30,7 @@ class _PortState extends State<Port> {
   void initState() {
     super.initState();
     port = Provider.of<PortStore>(context, listen: false);
+    node = Provider.of<NodeStore>(context, listen: false);
     _getRepoList();
   }
 
@@ -90,6 +93,7 @@ class _PortState extends State<Port> {
               isSelect: port.selectIndex == index,
               onSelect: () {
                 port.selectIndex = index;
+                node.portId = data[index].id!;
               },
             );
           } else {

@@ -15,6 +15,8 @@ class PortStore extends ChangeNotifier {
   // 创建数据
   Datum createData = Datum();
   Datum modifyData = Datum();
+  // 当前选择的数据
+  Datum selectData = Datum();
 
   // 状态
   int operationType = 0;
@@ -24,8 +26,11 @@ class PortStore extends ChangeNotifier {
   int get selectIndex => _selectIndex;
   set selectIndex(int index) {
     _selectIndex = index;
+    selectData = data!.data![index];
     notifyListeners();
   }
+
+  
 
   PortStore();
 

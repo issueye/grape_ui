@@ -15,12 +15,22 @@ class FieldInfo {
   bool titleCenter;
   FieldChild? child;
 
-  FieldInfo({this.title = '', this.name = '', this.width, this.clip = false, this.child, this.titleCenter = false});
+  FieldInfo(
+      {this.title = '',
+      this.name = '',
+      this.width,
+      this.clip = false,
+      this.child,
+      this.titleCenter = false});
 }
 
 // ignore: must_be_immutable
 class NodeTable extends StatefulWidget {
-  NodeTable({super.key, required this.fieldInfo, required this.context, this.tableData});
+  NodeTable(
+      {super.key,
+      required this.fieldInfo,
+      required this.context,
+      this.tableData});
   List<FieldInfo> fieldInfo;
   Node? tableData;
   BuildContext context;
@@ -31,6 +41,7 @@ class NodeTable extends StatefulWidget {
 
 class _NodeTableState extends State<NodeTable> {
   List<Widget> rows = [];
+  int selectRow = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +56,12 @@ class _NodeTableState extends State<NodeTable> {
           Expanded(
             child: Consumer<NodeStore>(
               builder: (context, value, child) {
+                if (rows.isEmpty) {
+                  return Expanded(
+                    child: rows[0],
+                  );
+                }
+
                 return ListView.builder(
                   itemCount: rows.length,
                   itemBuilder: (context, index) {
@@ -62,7 +79,8 @@ class _NodeTableState extends State<NodeTable> {
   _getTableBody() {
     rows.clear();
     if (widget.tableData == null) {
-      return rows.add(const Center(child: Text('没有数据')));
+      rows.add(const Center(child: Text('没有数据', style: AppTheme.defaultTextStyle)));
+      return rows;
     }
 
     for (var i = 0; i < widget.tableData!.data!.length; i++) {
@@ -86,9 +104,16 @@ class _NodeTableState extends State<NodeTable> {
         child: Ink(
           color: i % 2 == 0 ? const Color(0xFFF0F7FF) : Colors.white,
           child: InkWell(
-            onTap: () {},
+            onTap: () {
+              setState(() {
+                selectRow = i;
+              });
+            },
             hoverColor: const Color(0xffD6EAFF),
-            child: Row(children: rowData),
+            child: Container(
+              color: selectRow == i ? const Color(0xffA6D1FF) : null,
+              child: Row(children: rowData),
+            ),
           ),
         ),
       );
@@ -100,7 +125,10 @@ class _NodeTableState extends State<NodeTable> {
     List<Widget> header = [];
     for (var element in widget.fieldInfo) {
       header.add(
-        fieldData(name: element.title, width: element.width, isCenter: element.titleCenter),
+        fieldData(
+            name: element.title,
+            width: element.width,
+            isCenter: element.titleCenter),
       );
     }
     return header;
@@ -121,14 +149,16 @@ class _NodeTableState extends State<NodeTable> {
     var contain = Container(
       width: width,
       padding: const EdgeInsets.all(5),
-      alignment: isCenter ? Alignment.center: null,
+      alignment: isCenter ? Alignment.center : null,
       child: clip
           ? Tooltip(
               message: name.toString(),
               textStyle: AppTheme.lightTextStyle,
               child: text,
             )
-          : child == null? text : child(widget.context, index, name),
+          : child == null
+              ? text
+              : child(widget.context, index, name),
     );
 
     return width == null ? Expanded(child: contain) : contain;

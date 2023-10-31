@@ -1,4 +1,5 @@
 // 端口号管理
+import 'package:flutter/material.dart';
 import 'package:go_grape_ui/model/node/node.dart';
 
 import '../model/node/datum.dart';
@@ -10,14 +11,15 @@ class NodeApi {
   static Future<ResMessage> createNode(Datum data) async {
     String url = '/api/v1/node';
     var reqData = data.toJson();
+    debugPrint('reqData = $reqData');
     var res = await DioSingleton.postData(url, reqData);
     return ResMessage.fromJson(res.data);
   }
 
   // 获取节点列表
-  static Future<Node> getList() async {
+  static Future<Node> getList({Map<String, dynamic>? params}) async {
     String url = '/api/v1/node';
-    var res = await DioSingleton.getData(url);
+    var res = await DioSingleton.getData(url, params: params);
     return Node.fromJson(res.data);
   }
 

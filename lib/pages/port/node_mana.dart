@@ -20,12 +20,10 @@ class NodeMana extends StatefulWidget {
 class _NodeManaState extends State<NodeMana> {
   final TextEditingController _qryControl = TextEditingController();
 
-
   @override
   void initState() {
     super.initState();
   }
-
 
   final List<FieldInfo> fieldList = [
     FieldInfo(title: '名称', name: 'name', width: 100),
@@ -54,20 +52,31 @@ class _NodeManaState extends State<NodeMana> {
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            BarButton(icon: Resources.edit, tipMessage: '编辑', onTap: () async {
-              await editNode();
-            }),
+            BarButton(
+                icon: Resources.edit,
+                tipMessage: '编辑',
+                onTap: () async {
+                  node.modifyData = data;
+                  node.operationType = 1;
+                  debugPrint(data.toString());
+                  var isOk = await editNode();
+                  if (isOk) {
+                    node.list();
+                  }
+                }),
             const SizedBox(width: 10),
-            BarButton(icon: Resources.delete, tipMessage: '删除', onTap: () async {
-              await showMessageBox(
-                      '删除', '''是否删除 ${data.name} ?''')
-                  .then((value) async {
-                if (value) {
-                  await node.delete(data.id!);
-                  await node.list();
-                }
-              });
-            }),
+            BarButton(
+                icon: Resources.delete,
+                tipMessage: '删除',
+                onTap: () async {
+                  await showMessageBox('删除', '''是否删除 ${data.name} ?''')
+                      .then((value) async {
+                    if (value) {
+                      await node.delete(data.id!);
+                      await node.list();
+                    }
+                  });
+                }),
           ],
         );
       },
@@ -113,8 +122,16 @@ class _NodeManaState extends State<NodeMana> {
             ],
           ),
           const SizedBox(height: 30),
-          // 表格头部
-          NodeTable(fieldInfo: fieldList, tableData: node.data, context: context),
+          Consumer<NodeStore>(
+            builder: (context, value, child) {
+              // 表格头部
+              return NodeTable(
+                fieldInfo: fieldList,
+                tableData: node.data,
+                context: context,
+              ); 
+            },
+          ),
           const Spacer(),
         ],
       ),

@@ -12,6 +12,14 @@ class NodeStore extends ChangeNotifier {
     notifyListeners();
   }
 
+  String _portId = '';
+  String get portId => _portId;
+  set portId(String id) {
+    _portId = id;
+    list();
+  } 
+
+
   // 创建数据
   Datum createData = Datum();
   Datum modifyData = Datum();
@@ -45,19 +53,21 @@ class NodeStore extends ChangeNotifier {
   // 添加端口号信息
   Future<void> create() async {
     if (DioSingleton.baseUrl == '') return;
+    modifyData.portId = portId;
     await NodeApi.createNode(createData);
   }
 
   // 获取列表
   Future<void> list() async {
     if (DioSingleton.baseUrl == '') return;
-    var res = await NodeApi.getList();
+    var res = await NodeApi.getList(params: {'portId': _portId});
     data = res;
   }
 
   // 修改信息
   Future<void> modify() async {
     if (DioSingleton.baseUrl == '') return;
+    modifyData.portId = portId;
     await NodeApi.modify(modifyData);
   }
 
