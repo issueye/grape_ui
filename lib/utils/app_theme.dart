@@ -94,4 +94,12 @@ class Resources {
       color: color,
     );
   }
+
+  static SvgPicture restart({Color color = AppTheme.successColor}) {
+    return SvgPicture.asset(
+      'assets/svg/restart.svg',
+      // ignore: deprecated_member_use
+      color: color,
+    );
+  }
 }

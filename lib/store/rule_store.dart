@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:go_grape_ui/api/node.dart';
-import '../model/node/datum.dart';
-import '../model/node/node.dart';
+import 'package:go_grape_ui/api/rule.dart';
+import 'package:go_grape_ui/model/rule/rule_info.dart';
+import '../model/rule/datum.dart';
 import '../utils/request/services.dart';
 
-class NodeStore extends ChangeNotifier {
-  Node? _data;
-  Node? get data => _data; // 列表数据
-  set data(Node? data) {
+class RuleStore extends ChangeNotifier {
+  Rule? _data;
+  Rule? get data => _data; // 列表数据
+  set data(Rule? data) {
     _data = data;
     notifyListeners();
   }
@@ -34,7 +34,7 @@ class NodeStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  NodeStore();
+  RuleStore();
 
   // 长度
   int len() {
@@ -53,13 +53,13 @@ class NodeStore extends ChangeNotifier {
   Future<void> create() async {
     if (DioSingleton.baseUrl == '') return;
     modifyData.portId = portId;
-    await NodeApi.create(createData);
+    await RuleApi.create(createData);
   }
 
   // 获取列表
   Future<void> list({String? condition}) async {
     if (DioSingleton.baseUrl == '') return;
-    var res = await NodeApi.getList(
+    var res = await RuleApi.getList(
       params: {'portId': _portId, 'condition': condition},
     );
     data = res;
@@ -69,12 +69,12 @@ class NodeStore extends ChangeNotifier {
   Future<void> modify() async {
     if (DioSingleton.baseUrl == '') return;
     modifyData.portId = portId;
-    await NodeApi.modify(modifyData);
+    await RuleApi.modify(modifyData);
   }
 
   // 删除信息
   Future<void> delete(String id) async {
     if (DioSingleton.baseUrl == '') return;
-    await NodeApi.delete(id);
+    await RuleApi.delete(id);
   }
 }

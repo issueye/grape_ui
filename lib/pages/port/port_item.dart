@@ -133,10 +133,11 @@ class _PortItemState extends State<PortItem> {
         ),
         const Spacer(),
         BarButton(
-          icon: widget.data.state! ? Resources.stop() : Resources.start(),
+          icon: widget.data.state! ? Resources.restart() : Resources.restart(color: AppTheme.dangerColor),
           tipMessage: widget.data.state! ? '使用中，点击停用' : '停用中，点击启用',
           onTap: () async {
-            // await editPort();
+            await port.modifyState(widget.data.id!);
+            await port.list();
           },
         ),
         const SizedBox(width: 10),

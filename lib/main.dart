@@ -4,6 +4,7 @@ import 'package:go_grape_ui/router/index.dart';
 import 'package:flutter/material.dart';
 import 'package:go_grape_ui/store/node_store.dart';
 import 'package:go_grape_ui/store/port_store.dart';
+import 'package:go_grape_ui/store/rule_store.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -23,12 +24,16 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<PortStore>(create: (_) => PortStore()),
         ChangeNotifierProvider<NodeStore>(create: (_) => NodeStore()),
+        ChangeNotifierProvider<RuleStore>(create: (_) => RuleStore()),
       ],
       child: MaterialApp.router(
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
+          appBarTheme: const AppBarTheme(
+            toolbarHeight: 40,
+          ),
         ),
         routerConfig: AppRoutes.router,
         builder: FlutterSmartDialog.init(),

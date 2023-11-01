@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_grape_ui/components/custom_divider.dart';
-import 'package:go_grape_ui/model/node/node.dart';
+import 'package:go_grape_ui/model/base_model.dart';
 import 'package:go_grape_ui/store/node_store.dart';
 import 'package:provider/provider.dart';
-import '../../utils/app_theme.dart';
+import '../utils/app_theme.dart';
 
 typedef FieldChild = Widget Function(BuildContext, int, dynamic);
 
@@ -25,27 +25,28 @@ class FieldInfo {
 }
 
 // ignore: must_be_immutable
-class NodeTable extends StatefulWidget {
-  NodeTable(
-      {super.key,
-      required this.fieldInfo,
-      required this.context,
-      this.tableData});
+class CustomTable<T extends BaseModel> extends StatefulWidget {
+  CustomTable({
+    super.key,
+    required this.fieldInfo,
+    required this.context,
+    required this.tableData,
+  });
   List<FieldInfo> fieldInfo;
-  Node? tableData;
+  T? tableData;
   BuildContext context;
 
   @override
-  State<NodeTable> createState() => _NodeTableState();
+  State<CustomTable> createState() => _CustomTableState();
 }
 
-class _NodeTableState extends State<NodeTable> {
+class _CustomTableState extends State<CustomTable> {
   List<Widget> rows = [];
   int selectRow = -1;
 
   @override
   Widget build(BuildContext context) {
-    _getTableBody();
+    _getCustomTableBody();
 
     return SizedBox(
       // height: 450,
@@ -74,7 +75,7 @@ class _NodeTableState extends State<NodeTable> {
     );
   }
 
-  _getTableBody() {
+  _getCustomTableBody() {
     rows.clear();
     if (widget.tableData == null) {
       rows.add(
@@ -82,8 +83,8 @@ class _NodeTableState extends State<NodeTable> {
       return rows;
     }
 
-    for (var i = 0; i < widget.tableData!.data!.length; i++) {
-      var data = widget.tableData!.data![i].toJson();
+    for (var i = 0; i < widget.tableData!.len(); i++) {
+      var data = widget.tableData!.getByIndex(i);
       List<Widget> rowData = [];
 
       for (var element in widget.fieldInfo) {

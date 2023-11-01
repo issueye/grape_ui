@@ -1,6 +1,7 @@
+import 'package:go_grape_ui/model/base_model.dart';
 import 'datum.dart';
 
-class Node {
+class Node extends BaseModel {
 	int? code;
 	String? message;
 	String? requestDatetime;
@@ -41,4 +42,16 @@ class Node {
 				'requestId': requestId,
 				'data': data?.map((e) => e.toJson()).toList(),
 			};
+      
+        @override
+        // ignore: avoid_renaming_method_parameters
+        Map<String, dynamic> getByIndex(int index) {
+          return data![index].toJson();
+        }
+      
+        @override
+        int len() {
+          if (data == null) return 0;
+          return data!.length;
+        }
 }

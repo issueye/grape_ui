@@ -4,6 +4,7 @@ import 'package:go_grape_ui/components/custom_text_field.dart';
 import 'package:go_grape_ui/pages/port/port_item.dart';
 import 'package:go_grape_ui/store/node_store.dart';
 import 'package:go_grape_ui/store/port_store.dart';
+import 'package:go_grape_ui/store/rule_store.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/app_theme.dart';
@@ -21,6 +22,7 @@ class _PortState extends State<Port> {
 
   late PortStore port = PortStore();
   late NodeStore node = NodeStore();
+  late RuleStore rule = RuleStore();
 
   Future<void> _getRepoList() async {
     await port.list();
@@ -31,6 +33,7 @@ class _PortState extends State<Port> {
     super.initState();
     port = Provider.of<PortStore>(context, listen: false);
     node = Provider.of<NodeStore>(context, listen: false);
+    rule = Provider.of<RuleStore>(context, listen: false);
     _getRepoList();
   }
 
@@ -94,6 +97,7 @@ class _PortState extends State<Port> {
               onSelect: () {
                 port.selectIndex = index;
                 node.portId = data[index].id!;
+                rule.portId = data[index].id!;
               },
             );
           } else {

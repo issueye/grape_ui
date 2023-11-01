@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_grape_ui/components/bar_button.dart';
-import 'package:go_grape_ui/model/node/node.dart';
-import 'package:go_grape_ui/pages/port/node_dialog.dart';
 import 'package:go_grape_ui/store/node_store.dart';
+import 'package:go_grape_ui/store/rule_store.dart';
 import 'package:go_grape_ui/utils/app_theme.dart';
 import 'package:provider/provider.dart';
 
@@ -11,14 +10,14 @@ import '../../components/custom_text_field.dart';
 import '../../components/message_dialog.dart';
 import '../../components/custom_table.dart';
 
-class NodeMana extends StatefulWidget {
-  const NodeMana({super.key});
+class RuleMana extends StatefulWidget {
+  const RuleMana({super.key});
 
   @override
-  State<NodeMana> createState() => _NodeManaState();
+  State<RuleMana> createState() => _RuleManaState();
 }
 
-class _NodeManaState extends State<NodeMana> {
+class _RuleManaState extends State<RuleMana> {
   final TextEditingController _qryControl = TextEditingController();
 
   @override
@@ -27,28 +26,25 @@ class _NodeManaState extends State<NodeMana> {
   }
 
   final List<FieldInfo> fieldList = [
-    FieldInfo(title: '名称', name: 'name', width: 100),
+    FieldInfo(title: '匹配规则', name: 'name', width: 100),
     FieldInfo(
-      title: '类型',
-      name: 'nodeType',
+      title: '端口号',
+      name: 'port',
       width: 80,
       titleCenter: true,
       child: (ctx, index, value) {
-        var val = value as int;
         return Container(
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           child: Container(
             width: 50,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(2),
-              color: val == 0
-                  ? AppTheme.successColor.withOpacity(0.8)
-                  : AppTheme.warnColor.withOpacity(0.8),
+              color: AppTheme.successColor.withOpacity(0.8),
             ),
             child: Align(
               alignment: Alignment.center,
               child: Text(
-                val == 0 ? '接口' : '页面',
+                value.toString(),
                 style: AppTheme.sizeTextStyle(10, color: Colors.white),
               ),
             ),
@@ -64,8 +60,8 @@ class _NodeManaState extends State<NodeMana> {
       width: 100,
       titleCenter: true,
       child: (ctx, index, value) {
-        var node = Provider.of<NodeStore>(ctx);
-        var data = node.data!.data![index];
+        var rule = Provider.of<RuleStore>(ctx);
+        var data = rule.data!.data![index];
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -73,13 +69,13 @@ class _NodeManaState extends State<NodeMana> {
                 icon: Resources.edit,
                 tipMessage: '编辑',
                 onTap: () async {
-                  node.modifyData = data;
-                  node.operationType = 1;
-                  debugPrint(data.toString());
-                  var isOk = await editNode();
-                  if (isOk) {
-                    node.list();
-                  }
+                  // rule.modifyData = data;
+                  // rule.operationType = 1;
+                  // debugPrint(data.toString());
+                  // var isOk = await editNode();
+                  // if (isOk) {
+                  //   rule.list();
+                  // }
                 }),
             const SizedBox(width: 10),
             BarButton(
@@ -89,8 +85,8 @@ class _NodeManaState extends State<NodeMana> {
                   await showMessageBox('删除', '''是否删除 ${data.name} ?''')
                       .then((value) async {
                     if (value) {
-                      await node.delete(data.id!);
-                      await node.list();
+                      await rule.delete(data.id!);
+                      await rule.list();
                     }
                   });
                 }),
@@ -102,7 +98,7 @@ class _NodeManaState extends State<NodeMana> {
 
   @override
   Widget build(BuildContext context) {
-    var node = Provider.of<NodeStore>(context);
+    var rule = Provider.of<RuleStore>(context);
     return Container(
       padding: const EdgeInsets.all(10),
       child: Column(
@@ -122,18 +118,18 @@ class _NodeManaState extends State<NodeMana> {
               CustomButton(
                 name: '查询',
                 onPressed: () async {
-                  await node.list(condition: _qryControl.text);
+                  await rule.list(condition: _qryControl.text);
                 },
               ),
               const SizedBox(width: 10),
               CustomButton(
                 name: '添加',
                 onPressed: () async {
-                  node.operationType = 0;
-                  var isOk = await addNode();
-                  if (isOk) {
-                    await node.list();
-                  }
+                  rule.operationType = 0;
+                  // var isOk = await addNode();
+                  // if (isOk) {
+                  //   await node.list();
+                  // }
                 },
               ),
             ],
@@ -143,9 +139,9 @@ class _NodeManaState extends State<NodeMana> {
             child: Consumer<NodeStore>(
               builder: (context, value, child) {
                 // 表格头部
-                return CustomTable<Node>(
+                return CustomTable(
                   fieldInfo: fieldList,
-                  tableData: node.data,
+                  tableData: rule.data,
                   context: context,
                 );
               },
