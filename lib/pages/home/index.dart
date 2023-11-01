@@ -1,9 +1,11 @@
 import 'package:go_grape_ui/components/menu/menu.dart';
 import 'package:go_grape_ui/pages/about/index.dart';
+import 'package:go_grape_ui/pages/cert/target_mana.dart';
 import 'package:go_grape_ui/pages/home/win_title.dart';
 import 'package:go_grape_ui/pages/port/index.dart';
 import 'package:go_grape_ui/pages/settings/index.dart';
 import 'package:flutter/material.dart';
+import 'package:go_grape_ui/pages/target/target_mana.dart';
 import 'package:logging/logging.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,6 +19,8 @@ class _HomePageState extends State<HomePage> {
   // 主菜单
   final List<MenuItemData> menus = [
     MenuItemData('端口号管理', Icons.apps, Icons.apps_outlined),
+    MenuItemData('地址管理', Icons.webhook, Icons.webhook_outlined),
+    MenuItemData('证书管理', Icons.credit_card, Icons.credit_card_outlined),
   ];
 
   // 其他菜单
@@ -29,6 +33,8 @@ class _HomePageState extends State<HomePage> {
 
   final List pages = [
     const PortMana(),
+    const TargetMana(),
+    const CertMana(),
     const SettingsPage(),
     const AboutPage(),
   ];
