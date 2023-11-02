@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_grape_ui/pages/port/node_mana.dart';
-import 'package:go_grape_ui/pages/port/rule_mana.dart';
+import 'package:go_grape_ui/pages/rule/rule_mana.dart';
 
 import '../../utils/app_theme.dart';
 import 'port_mana.dart';
@@ -74,7 +74,6 @@ class _PortManaState extends State<PortMana> {
               ),
               body: const TabBarView(
                 children: [
-                  // Text('123'),
                   RuleMana(),
                   NodeMana(),
                 ],

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_grape_ui/components/bar_button.dart';
 import 'package:go_grape_ui/model/cert/cert.dart';
-import 'package:go_grape_ui/pages/port/node_dialog.dart';
+import 'package:go_grape_ui/pages/cert/dialog.dart';
 import 'package:go_grape_ui/store/cert_store.dart';
-import 'package:go_grape_ui/store/node_store.dart';
 import 'package:go_grape_ui/utils/app_theme.dart';
 import 'package:provider/provider.dart';
 
@@ -50,7 +49,7 @@ class _CertManaState extends State<CertMana> {
                   cert.modifyData = data;
                   cert.operationType = 1;
                   debugPrint(data.toString());
-                  var isOk = await editNode();
+                  var isOk = await editCert();
                   if (isOk) {
                     cert.list();
                   }
@@ -104,7 +103,7 @@ class _CertManaState extends State<CertMana> {
                 name: '添加',
                 onPressed: () async {
                   cert.operationType = 0;
-                  var isOk = await addNode();
+                  var isOk = await addCert();
                   if (isOk) {
                     await cert.list();
                   }

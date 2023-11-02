@@ -164,3 +164,5 @@ class _CustomTableState extends State<CustomTable> {
     return width == null ? Expanded(child: contain) : contain;
   }
 }
+
+

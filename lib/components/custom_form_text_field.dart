@@ -131,3 +131,30 @@ class _CustomFormTextFieldState extends State<CustomFormTextField> {
         : Container();
   }
 }
+
+formFieldItem(
+  String name,
+  TextEditingController control,
+  String hint, {
+  bool isHaveTo = false,
+  int line = 1,
+  double space = 30,
+  double titleWidth = 55,
+}) {
+  return Row(
+    children: [
+      SizedBox(width: space),
+      Expanded(
+        child: CustomFormTextField(
+          controller: control,
+          title: name,
+          titleWidth: titleWidth,
+          hintText: hint,
+          isHaveTo: isHaveTo,
+          lines: line,
+        ),
+      ),
+      SizedBox(width: space),
+    ],
+  );
+}

@@ -1,6 +1,6 @@
 import 'package:go_grape_ui/components/menu/menu.dart';
 import 'package:go_grape_ui/pages/about/index.dart';
-import 'package:go_grape_ui/pages/cert/target_mana.dart';
+import 'package:go_grape_ui/pages/cert/cert_mana.dart';
 import 'package:go_grape_ui/pages/home/win_title.dart';
 import 'package:go_grape_ui/pages/port/index.dart';
 import 'package:go_grape_ui/pages/settings/index.dart';

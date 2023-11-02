@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_grape_ui/components/bar_button.dart';
+import 'package:go_grape_ui/components/custom_select.dart';
+import 'package:go_grape_ui/pages/rule/dialog.dart';
 import 'package:go_grape_ui/store/node_store.dart';
 import 'package:go_grape_ui/store/rule_store.dart';
 import 'package:go_grape_ui/utils/app_theme.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../components/custom_button.dart';
 import '../../components/custom_text_field.dart';
 import '../../components/message_dialog.dart';
 import '../../components/custom_table.dart';
+import '../../router/index.dart';
+import '../../store/port_store.dart';
 
 class RuleMana extends StatefulWidget {
   const RuleMana({super.key});
@@ -53,6 +58,7 @@ class _RuleManaState extends State<RuleMana> {
       },
     ),
     FieldInfo(title: '目标地址', name: 'target', clip: true),
+    FieldInfo(title: '目标路由', name: 'targetRoute', clip: true),
     FieldInfo(title: '备注', name: 'mark'),
     FieldInfo(
       title: '操作',
@@ -69,13 +75,13 @@ class _RuleManaState extends State<RuleMana> {
                 icon: Resources.edit,
                 tipMessage: '编辑',
                 onTap: () async {
-                  // rule.modifyData = data;
-                  // rule.operationType = 1;
-                  // debugPrint(data.toString());
-                  // var isOk = await editNode();
-                  // if (isOk) {
-                  //   rule.list();
-                  // }
+                  rule.modifyData = data;
+                  rule.operationType = 1;
+                  debugPrint(data.toString());
+                  var isOk = await editRule();
+                  if (isOk) {
+                    rule.list();
+                  }
                 }),
             const SizedBox(width: 10),
             BarButton(
@@ -99,55 +105,69 @@ class _RuleManaState extends State<RuleMana> {
   @override
   Widget build(BuildContext context) {
     var rule = Provider.of<RuleStore>(context);
-    return Container(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        children: [
-          const SizedBox(height: 30),
-          Wrap(
-            alignment: WrapAlignment.start,
-            children: [
-              SizedBox(
-                width: 200,
-                child: CustomTextField(
-                  controller: _qryControl,
-                  hintText: '检索信息',
+
+    var port = Provider.of<PortStore>(context);
+    port.list();
+    List<SelectOption> list = [];
+
+    if (port.data != null) {
+      for (var element in port.data!.data!) {
+        list.add(SelectOption(element.id!, element.port.toString()));
+      }
+    }
+
+    return Scaffold(
+      body: Container(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          children: [
+            const SizedBox(height: 30),
+            Wrap(
+              alignment: WrapAlignment.start,
+              children: [
+                SizedBox(
+                  width: 200,
+                  child: CustomTextField(
+                    controller: _qryControl,
+                    hintText: '检索信息',
+                  ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              CustomButton(
-                name: '查询',
-                onPressed: () async {
-                  await rule.list(condition: _qryControl.text);
-                },
-              ),
-              const SizedBox(width: 10),
-              CustomButton(
-                name: '添加',
-                onPressed: () async {
-                  rule.operationType = 0;
-                  // var isOk = await addNode();
-                  // if (isOk) {
-                  //   await node.list();
-                  // }
-                },
-              ),
-            ],
-          ),
-          const SizedBox(height: 30),
-          Expanded(
-            child: Consumer<NodeStore>(
-              builder: (context, value, child) {
-                // 表格头部
-                return CustomTable(
-                  fieldInfo: fieldList,
-                  tableData: rule.data,
-                  context: context,
-                );
-              },
+                const SizedBox(width: 10),
+                CustomButton(
+                  name: '查询',
+                  onPressed: () async {
+                    await rule.list(condition: _qryControl.text);
+                  },
+                ),
+                const SizedBox(width: 10),
+                CustomButton(
+                  name: '添加',
+                  onPressed: () async {
+                    rule.operationType = 0;
+                    // var isOk = await addRule();
+                    // if (isOk) {
+                    //   await rule.list();
+                    // }
+                    GoRouter.of(context).pushNamed(AppRoutes.ruleFormNamed);
+                  },
+                ),
+              ],
             ),
-          ),
-        ],
+            const SizedBox(height: 30),
+            Expanded(
+              child: Consumer<NodeStore>(
+                builder: (context, value, child) {
+                  // 表格头部
+                  return CustomTable(
+                    fieldInfo: fieldList,
+                    tableData: rule.data,
+                    context: context,
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

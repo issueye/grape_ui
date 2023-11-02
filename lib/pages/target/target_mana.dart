@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_grape_ui/components/bar_button.dart';
 import 'package:go_grape_ui/model/target/target_info.dart';
-import 'package:go_grape_ui/pages/port/node_dialog.dart';
-import 'package:go_grape_ui/store/node_store.dart';
+import 'package:go_grape_ui/pages/target/dialog.dart';
 import 'package:go_grape_ui/store/target_store.dart';
 import 'package:go_grape_ui/utils/app_theme.dart';
 import 'package:provider/provider.dart';
@@ -28,8 +27,9 @@ class _TargetManaState extends State<TargetMana> {
   }
 
   final List<FieldInfo> fieldList = [
-    FieldInfo(title: '名称', name: 'name'),
-    FieldInfo(title: '备注', name: 'mark'),
+    FieldInfo(title: '编码', name: 'id', width: 180),
+    FieldInfo(title: '名称', name: 'name', clip: true),
+    FieldInfo(title: '备注', name: 'mark', clip: true),
     FieldInfo(
       title: '操作',
       name: '操作',
@@ -48,7 +48,7 @@ class _TargetManaState extends State<TargetMana> {
                   target.modifyData = data;
                   target.operationType = 1;
                   debugPrint(data.toString());
-                  var isOk = await editNode();
+                  var isOk = await editTarget();
                   if (isOk) {
                     target.list();
                   }
@@ -102,7 +102,7 @@ class _TargetManaState extends State<TargetMana> {
                 name: '添加',
                 onPressed: () async {
                   target.operationType = 0;
-                  var isOk = await addNode();
+                  var isOk = await addTarget();
                   if (isOk) {
                     await target.list();
                   }
