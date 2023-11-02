@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:go_grape_ui/components/bar_button.dart';
-import 'package:go_grape_ui/pages/port/port_dialog.dart';
 import 'package:go_grape_ui/store/port_store.dart';
 import 'package:go_grape_ui/utils/app_theme.dart';
 import 'package:provider/provider.dart';
 
-import '../../components/message_dialog.dart';
-import '../../model/port/datum.dart';
+import '../../../model/port/datum.dart';
+import '../bar_buttons.dart';
 
 class PortItem extends StatefulWidget {
-  const PortItem(
-      {super.key, required this.data, this.isSelect = false, this.onSelect});
-  final Datum data;
-  final bool isSelect;
-  final Function()? onSelect;
+  const PortItem({
+    super.key,
+    required this.data,
+    this.isSelect = false,
+    this.onSelect,
+  });
+  final Datum data; // 数据
+  final bool isSelect; // 选择
+  final Function()? onSelect; // 选择事件
 
   @override
   State<PortItem> createState() => _PortItemState();
@@ -37,7 +39,6 @@ class _PortItemState extends State<PortItem> {
 
   @override
   Widget build(BuildContext context) {
-    var portStore = Provider.of<PortStore>(context);
     return Container(
       padding: const EdgeInsets.only(top: 5, bottom: 5),
       child: InkWell(
@@ -65,7 +66,7 @@ class _PortItemState extends State<PortItem> {
               child: Column(
                 children: [
                   _cardTileHeight,
-                  _barButtons(portStore),
+                  ItemButton(data: widget.data),
                   _cardTileHeight,
                   Container(
                     height: 1,
@@ -103,69 +104,6 @@ class _PortItemState extends State<PortItem> {
             ),
           ),
         ),
-      ],
-    );
-  }
-
-  _roundDot(bool state) {
-    return Container(
-      width: 10,
-      height: 10,
-      decoration: BoxDecoration(
-        color: state ? AppTheme.successColor : AppTheme.dangerColor,
-        borderRadius: const BorderRadius.all(
-          Radius.circular(5),
-        ),
-      ),
-    );
-  }
-
-  _barButtons(PortStore port) {
-    debugPrint('当前状态 ${widget.data.state!}');
-    return Row(
-      children: [
-        _cardTileSpace,
-        _roundDot(widget.data.state!),
-        _cardTileSpace,
-        Text(
-          '端口号 ${widget.data.port.toString()}',
-          style: AppTheme.sizeTextStyle(16),
-        ),
-        const Spacer(),
-        BarButton(
-          icon: widget.data.state! ? Resources.restart() : Resources.restart(color: AppTheme.dangerColor),
-          tipMessage: widget.data.state! ? '使用中，点击停用' : '停用中，点击启用',
-          onTap: () async {
-            await port.modifyState(widget.data.id!);
-            await port.list();
-          },
-        ),
-        const SizedBox(width: 10),
-        BarButton(
-          icon: Resources.edit,
-          tipMessage: '编辑',
-          onTap: () async {
-            port.operationType = 1;
-            port.modifyData = widget.data;
-            await editPort();
-            await port.list();
-          },
-        ),
-        const SizedBox(width: 10),
-        BarButton(
-            icon: Resources.delete,
-            tipMessage: '删除',
-            onTap: () async {
-              await showMessageBox(
-                      '删除', '''是否删除 ${widget.data.port.toString()} ?''')
-                  .then((value) async {
-                if (value) {
-                  await port.delete(widget.data.id!);
-                  await port.list();
-                }
-              });
-            }),
-        _cardTileSpace,
       ],
     );
   }

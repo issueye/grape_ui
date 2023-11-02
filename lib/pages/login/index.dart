@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               children: [
                 InkWell(
-                  child: SizedBox(
+                  child: const SizedBox(
                     width: 400,
                     height: AppTheme.defaultAppBarHeight,
                     child: Row(

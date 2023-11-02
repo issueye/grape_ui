@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_grape_ui/components/bar_button.dart';
-import 'package:go_grape_ui/components/custom_select.dart';
-import 'package:go_grape_ui/pages/rule/dialog.dart';
-import 'package:go_grape_ui/store/node_store.dart';
 import 'package:go_grape_ui/store/rule_store.dart';
 import 'package:go_grape_ui/utils/app_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../components/custom_button.dart';
-import '../../components/custom_text_field.dart';
-import '../../components/message_dialog.dart';
-import '../../components/custom_table.dart';
-import '../../router/index.dart';
-import '../../store/port_store.dart';
+import '../../../components/custom_button.dart';
+import '../../../components/custom_text_field.dart';
+import '../../../components/message_dialog.dart';
+import '../../../components/custom_table.dart';
+import '../../../router/index.dart';
 
 class RuleMana extends StatefulWidget {
   const RuleMana({super.key});
@@ -78,10 +74,6 @@ class _RuleManaState extends State<RuleMana> {
                   rule.modifyData = data;
                   rule.operationType = 1;
                   debugPrint(data.toString());
-                  var isOk = await editRule();
-                  if (isOk) {
-                    rule.list();
-                  }
                 }),
             const SizedBox(width: 10),
             BarButton(
@@ -106,15 +98,15 @@ class _RuleManaState extends State<RuleMana> {
   Widget build(BuildContext context) {
     var rule = Provider.of<RuleStore>(context);
 
-    var port = Provider.of<PortStore>(context);
-    port.list();
-    List<SelectOption> list = [];
+    // var port = Provider.of<PortStore>(context);
+    // port.list();
+    // List<SelectOption> list = [];
 
-    if (port.data != null) {
-      for (var element in port.data!.data!) {
-        list.add(SelectOption(element.id!, element.port.toString()));
-      }
-    }
+    // if (port.data != null) {
+    //   for (var element in port.data!.data!) {
+    //     list.add(SelectOption(element.id!, element.port.toString()));
+    //   }
+    // }
 
     return Scaffold(
       body: Container(
@@ -155,7 +147,7 @@ class _RuleManaState extends State<RuleMana> {
             ),
             const SizedBox(height: 30),
             Expanded(
-              child: Consumer<NodeStore>(
+              child: Consumer<RuleStore>(
                 builder: (context, value, child) {
                   // 表格头部
                   return CustomTable(

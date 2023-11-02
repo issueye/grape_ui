@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:go_grape_ui/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -17,13 +18,15 @@ class CustomSelect extends StatefulWidget {
     required this.selectData,
     this.title = '',
     this.titleWidth = 70,
+    this.height = 70,
   }) : super(key: key);
   final String? hint;
   final String? validText;
   final String title;
   final double titleWidth;
+  final double height;
   final List<SelectOption> data;
-  final Function(dynamic)? onChanged;
+  final Function(dynamic key, dynamic value)? onChanged;
   final TextEditingController selectData;
 
   @override
@@ -32,6 +35,8 @@ class CustomSelect extends StatefulWidget {
 }
 
 class _CustomSelectState extends State<CustomSelect> {
+  late dynamic value;
+
   List<DropdownMenuItem<String>> _getItems() {
     List<DropdownMenuItem<String>> items = [];
     for (var element in widget.data) {
@@ -42,6 +47,9 @@ class _CustomSelectState extends State<CustomSelect> {
             element.value,
             style: AppTheme.defaultTextStyle,
           ),
+          onTap: () {
+            value = element.value;
+          },
         ),
       );
     }
@@ -51,99 +59,93 @@ class _CustomSelectState extends State<CustomSelect> {
 
   @override
   Widget build(BuildContext context) {
-    Text hintText = widget.hint == null ? const Text('') : Text(widget.hint!);
+    Text hintText = widget.hint == null
+        ? const Text('')
+        : Text(widget.hint!, style: AppTheme.defaultTextStyle);
 
-    return ConstrainedBox(
-      constraints: const BoxConstraints(
-        maxHeight: AppTheme.defaultTextFieldHeight,
-      ),
-      child: DropdownButtonFormField(
-        isExpanded: true,
-        decoration: InputDecoration(
-          isCollapsed: true,
-          icon: SizedBox(
-            width: widget.titleWidth,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(widget.title, style: AppTheme.defaultTextStyle),
-              ],
+    // ignore: no_leading_underscores_for_local_identifiers
+    _border(Color color) {
+      return OutlineInputBorder(
+          gapPadding: 0,
+          borderSide: BorderSide(color: color),
+          borderRadius: AppTheme.mainRadius);
+    }
+
+    return SizedBox(
+      height: widget.height,
+      child: Column(
+        children: [
+          Expanded(
+            child: DropdownButtonFormField2(
+              isExpanded: true,
+              decoration: InputDecoration(
+                isCollapsed: true,
+                icon: SizedBox(
+                  width: widget.titleWidth,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(widget.title, style: AppTheme.defaultTextStyle),
+                    ],
+                  ),
+                ),
+                contentPadding: AppTheme.defaultTextFieldContentPadding,
+                border: _border(AppTheme.mainColor),
+                focusedBorder: _border(AppTheme.mainColor), // 聚焦时的边框
+                enabledBorder: _border(AppTheme.enabledColor), // 失去焦点时的边框
+                errorBorder: _border(AppTheme.errorContentTextColor),
+              ),
+              hint: hintText,
+              items: _getItems(),
+              validator: (value) {
+                if (value == null) {
+                  return widget.validText == null ? '' : widget.validText!;
+                }
+                return null;
+              },
+              dropdownStyleData: const DropdownStyleData(
+                offset: Offset(1, 30),
+                decoration: BoxDecoration(
+                  borderRadius: AppTheme.mainRadius,
+                ),
+              ),
+              menuItemStyleData: const MenuItemStyleData(
+                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                height: 28,
+              ),
+              onChanged: ((val) {
+                widget.onChanged!(val, value);
+              }),
+              customButton: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.selectData.text == ''
+                        ? widget.hint!
+                        : widget.selectData.text,
+                    style: AppTheme.defaultTextStyle,
+                  ),
+                  widget.selectData.text == ''
+                      ? const Icon(
+                          Icons.arrow_drop_down_outlined,
+                          color: AppTheme.defaultContentTextColor,
+                        )
+                      : InkWell(
+                          onTap: () {
+                            widget.selectData.text = '';
+                            setState(() {});
+                          },
+                          child: const Icon(
+                            Icons.close_outlined,
+                            size: 15,
+                            color: AppTheme.defaultContentTextColor,
+                          ),
+                        ),
+                ],
+              ),
             ),
           ),
-          contentPadding: AppTheme.defaultTextFieldContentPadding,
-          border: const OutlineInputBorder(
-            borderRadius: AppTheme.mainRadius,
-          ),
-          // 聚焦时的边框
-          focusedBorder: const OutlineInputBorder(
-            gapPadding: 0,
-            borderSide: BorderSide(
-              color: AppTheme.mainColor,
-            ),
-            borderRadius: AppTheme.mainRadius,
-          ),
-          // 失去焦点时的边框
-          enabledBorder: const OutlineInputBorder(
-            gapPadding: 0,
-            borderSide: BorderSide(
-              color: AppTheme.enabledColor,
-            ),
-            borderRadius: AppTheme.mainRadius,
-          ),
-          errorBorder: const OutlineInputBorder(
-            gapPadding: 0,
-            borderSide: BorderSide(
-              color: AppTheme.errorContentTextColor,
-            ),
-            borderRadius: AppTheme.mainRadius,
-          ),
-        ),
-        hint: hintText,
-        items: _getItems(),
-        validator: (value) {
-          if (value == null) {
-            return widget.validText == null ? '' : widget.validText!;
-          }
-          return null;
-        },
-        // dropdownStyleData: const DropdownStyleData(
-        //   offset: Offset(1, -10),
-        //   decoration: BoxDecoration(
-        //     borderRadius: AppTheme.mainRadius,
-        //   ),
-        // ),
-        // menuItemStyleData: const MenuItemStyleData(
-        //   padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-        //   height: 28,
-        // ),
-        onChanged: widget.onChanged,
-        // customButton: Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   children: [
-        //     Text(
-        //       widget.selectData.text == ''
-        //           ? widget.hint!
-        //           : widget.selectData.text,
-        //       style: AppTheme.defaultTextStyle,
-        //     ),
-        //     widget.selectData.text == ''
-        //         ? const Icon(
-        //             Icons.arrow_drop_down_outlined,
-        //             color: AppTheme.defaultContentTextColor,
-        //           )
-        //         : InkWell(
-        //             onTap: () {
-        //               widget.selectData.text = '';
-        //               setState(() {});
-        //             },
-        //             child: const Icon(
-        //               Icons.close_outlined,
-        //               size: 15,
-        //               color: AppTheme.defaultContentTextColor,
-        //             ),
-        //           ),
-        //   ],
-        // ),
+        ],
       ),
     );
   }
@@ -151,29 +153,28 @@ class _CustomSelectState extends State<CustomSelect> {
 
 formSelectFieldItem(
   List<SelectOption> list,
-    String name,
-    TextEditingController control,
-    String hint, {
-    bool isHaveTo = false,
-    int line = 1,
-    double space = 30,
-    double titleWidth = 55,
-  }) {
-    return Row(
-      children: [
-        SizedBox(width: space),
-        Expanded(
-          child: CustomSelect(
-            title: name,
-            data: list,
-            selectData: control,
-            hint: hint,
-            onChanged: (value) {
-              
-            },
-          ),
+  String name,
+  TextEditingController control,
+  String hint,
+  dynamic Function(dynamic, dynamic)? onChanged, {
+  bool isHaveTo = false,
+  int line = 1,
+  double space = 30,
+  double titleWidth = 55,
+}) {
+  return Row(
+    children: [
+      SizedBox(width: space),
+      Expanded(
+        child: CustomSelect(
+          title: name,
+          data: list,
+          selectData: control,
+          hint: hint,
+          onChanged: onChanged,
         ),
-        SizedBox(width: space),
-      ],
-    );
-  }
+      ),
+      SizedBox(width: space),
+    ],
+  );
+}
