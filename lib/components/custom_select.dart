@@ -8,8 +8,11 @@ class SelectOption {
   SelectOption(this.key, this.value);
 }
 
+typedef valueChanged = Function(String, String)?;
+
+// ignore: must_be_immutable
 class CustomSelect extends StatefulWidget {
-  const CustomSelect({
+  CustomSelect({
     Key? key,
     this.hint,
     this.validText,
@@ -19,6 +22,7 @@ class CustomSelect extends StatefulWidget {
     this.title = '',
     this.titleWidth = 70,
     this.height = 70,
+    this.isHaveTo = false,
   }) : super(key: key);
   final String? hint;
   final String? validText;
@@ -26,8 +30,10 @@ class CustomSelect extends StatefulWidget {
   final double titleWidth;
   final double height;
   final List<SelectOption> data;
-  final Function(dynamic key, dynamic value)? onChanged;
   final TextEditingController selectData;
+  bool isHaveTo;
+  valueChanged? onChanged;
+  
 
   @override
   // ignore: library_private_types_in_public_api
@@ -35,7 +41,8 @@ class CustomSelect extends StatefulWidget {
 }
 
 class _CustomSelectState extends State<CustomSelect> {
-  late dynamic value;
+  late String _selectValue = '';
+  final padding = const EdgeInsets.symmetric(vertical: 12, horizontal: 8);
 
   List<DropdownMenuItem<String>> _getItems() {
     List<DropdownMenuItem<String>> items = [];
@@ -47,9 +54,6 @@ class _CustomSelectState extends State<CustomSelect> {
             element.value,
             style: AppTheme.defaultTextStyle,
           ),
-          onTap: () {
-            value = element.value;
-          },
         ),
       );
     }
@@ -57,12 +61,16 @@ class _CustomSelectState extends State<CustomSelect> {
     return items;
   }
 
+  _iconButton(IconData icon) {
+    return Icon(
+      icon,
+      size: 15,
+      color: AppTheme.defaultContentTextColor,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    Text hintText = widget.hint == null
-        ? const Text('')
-        : Text(widget.hint!, style: AppTheme.defaultTextStyle);
-
     // ignore: no_leading_underscores_for_local_identifiers
     _border(Color color) {
       return OutlineInputBorder(
@@ -71,76 +79,82 @@ class _CustomSelectState extends State<CustomSelect> {
           borderRadius: AppTheme.mainRadius);
     }
 
+    // ignore: no_leading_underscores_for_local_identifiers
+    _hintText() {
+      return Text(
+        widget.selectData.text == '' ? widget.hint! : widget.selectData.text,
+        style: widget.selectData.text == ''
+            ? AppTheme.sizeTextStyle(12, color: AppTheme.hintColor)
+            : AppTheme.defaultTextStyle,
+      );
+    }
+
+    String _getItemByKey(String key) {
+      for (var element in widget.data) {
+        if (element.key == key) return element.value;
+      }
+
+      return '';
+    }
+
     return SizedBox(
       height: widget.height,
       child: Column(
         children: [
           Expanded(
             child: DropdownButtonFormField2(
-              isExpanded: true,
               decoration: InputDecoration(
                 isCollapsed: true,
+                contentPadding: padding,
                 icon: SizedBox(
                   width: widget.titleWidth,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      _haveTo(),
                       Text(widget.title, style: AppTheme.defaultTextStyle),
                     ],
                   ),
                 ),
-                contentPadding: AppTheme.defaultTextFieldContentPadding,
                 border: _border(AppTheme.mainColor),
                 focusedBorder: _border(AppTheme.mainColor), // 聚焦时的边框
                 enabledBorder: _border(AppTheme.enabledColor), // 失去焦点时的边框
                 errorBorder: _border(AppTheme.errorContentTextColor),
               ),
-              hint: hintText,
               items: _getItems(),
               validator: (value) {
-                if (value == null) {
-                  return widget.validText == null ? '' : widget.validText!;
-                }
-                return null;
+                if (!widget.isHaveTo) return null;
+                return widget.selectData.text == '' ? widget.validText : null;
               },
+              // 下拉框样式
               dropdownStyleData: const DropdownStyleData(
-                offset: Offset(1, 30),
-                decoration: BoxDecoration(
-                  borderRadius: AppTheme.mainRadius,
-                ),
+                offset: Offset(1, -10),
+                decoration: BoxDecoration(borderRadius: AppTheme.mainRadius),
               ),
+              // 下拉框项目样式
               menuItemStyleData: const MenuItemStyleData(
                 padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                 height: 28,
               ),
-              onChanged: ((val) {
-                widget.onChanged!(val, value);
-              }),
+              onChanged:(value) {
+                debugPrint('value $value');
+                var val = _getItemByKey(value.toString());
+                setState(() {
+                  widget.selectData.text = val;
+                });
+              },
               customButton: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    widget.selectData.text == ''
-                        ? widget.hint!
-                        : widget.selectData.text,
-                    style: AppTheme.defaultTextStyle,
-                  ),
+                  _hintText(),
                   widget.selectData.text == ''
-                      ? const Icon(
-                          Icons.arrow_drop_down_outlined,
-                          color: AppTheme.defaultContentTextColor,
-                        )
+                      ? _iconButton(Icons.arrow_drop_down_outlined)
                       : InkWell(
                           onTap: () {
                             widget.selectData.text = '';
                             setState(() {});
                           },
-                          child: const Icon(
-                            Icons.close_outlined,
-                            size: 15,
-                            color: AppTheme.defaultContentTextColor,
-                          ),
-                        ),
+                          child: _iconButton(Icons.close_outlined)),
                 ],
               ),
             ),
@@ -149,6 +163,12 @@ class _CustomSelectState extends State<CustomSelect> {
       ),
     );
   }
+
+  _haveTo() {
+    return widget.isHaveTo
+        ? const Text('*', style: TextStyle(color: AppTheme.dangerColor))
+        : Container();
+  }
 }
 
 formSelectFieldItem(
@@ -156,7 +176,8 @@ formSelectFieldItem(
   String name,
   TextEditingController control,
   String hint,
-  dynamic Function(dynamic, dynamic)? onChanged, {
+  {
+  valueChanged onChanged,
   bool isHaveTo = false,
   int line = 1,
   double space = 30,
@@ -168,9 +189,12 @@ formSelectFieldItem(
       Expanded(
         child: CustomSelect(
           title: name,
+          titleWidth: titleWidth,
           data: list,
           selectData: control,
+          isHaveTo: isHaveTo,
           hint: hint,
+          validText: hint,
           onChanged: onChanged,
         ),
       ),

@@ -49,6 +49,11 @@ class RuleStore extends ChangeNotifier {
     }
   }
 
+  clear() {
+    createData = Datum();
+    modifyData = Datum();
+  }
+
   // 添加端口号信息
   Future<void> create() async {
     if (DioSingleton.baseUrl == '') return;

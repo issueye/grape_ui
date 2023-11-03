@@ -13,6 +13,7 @@ class CustomFormTextField extends StatefulWidget {
     this.height = 70,
     this.isHaveTo = false,
     this.lines = 1,
+    this.enabled = true,
   }) : super(key: key);
   final TextEditingController controller;
   IconData? suffixIcon;
@@ -21,6 +22,7 @@ class CustomFormTextField extends StatefulWidget {
   double titleWidth;
   double height;
   bool isHaveTo;
+  bool enabled;
   int lines;
 
   @override
@@ -72,6 +74,7 @@ class _CustomFormTextFieldState extends State<CustomFormTextField> {
         children: [
           Expanded(
             child: TextFormField(
+              enabled: widget.enabled,
               maxLines: widget.lines,
               cursorColor: AppTheme.mainColor,
               focusNode: _focusNode,
@@ -103,8 +106,8 @@ class _CustomFormTextFieldState extends State<CustomFormTextField> {
                 border: _getBorder(AppTheme.mainColor), // 边框
                 focusedBorder: _getBorder(AppTheme.mainColor), // 聚焦时的边框
                 enabledBorder: _getBorder(AppTheme.enabledColor), // 失去焦点时的边框
-                errorBorder:
-                    _getBorder(AppTheme.errorContentTextColor), // 错误时边框
+                disabledBorder: _getBorder(AppTheme.hintColor), // 不可用时边框
+                errorBorder: _getBorder(AppTheme.dangerColor), // 错误时边框
               ),
               validator: (value) {
                 if (!widget.isHaveTo) return null;
@@ -140,6 +143,7 @@ formFieldItem(
   int line = 1,
   double space = 30,
   double titleWidth = 55,
+  bool enabled = true,
 }) {
   return Row(
     children: [
@@ -152,6 +156,7 @@ formFieldItem(
           hintText: hint,
           isHaveTo: isHaveTo,
           lines: line,
+          enabled: enabled,
         ),
       ),
       SizedBox(width: space),

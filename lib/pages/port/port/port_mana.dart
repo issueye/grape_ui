@@ -96,6 +96,7 @@ class _PortState extends State<Port> {
               isSelect: port.selectIndex == index,
               onSelect: () {
                 port.selectIndex = index;
+                port.port = data[index].port!;
                 node.portId = data[index].id!;
                 rule.portId = data[index].id!;
               },

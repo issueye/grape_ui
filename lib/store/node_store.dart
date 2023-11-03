@@ -49,6 +49,40 @@ class NodeStore extends ChangeNotifier {
     }
   }
 
+  String getIdByName(String name) {
+    if (data == null) return '';
+    if (name == '') return '';
+
+    var list = data!.data!;
+
+    if (list.isEmpty) return '';
+
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].name == name) {
+        return list[i].id!;
+      } 
+    }
+
+    return '';
+  }
+
+  String getNameById(String id) {
+    if (data == null) return '';
+    if (id == '') return '';
+
+    var list = data!.data!;
+
+    if (list.isEmpty) return '';
+
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].id == id) {
+        return list[i].name!;
+      } 
+    }
+
+    return '';
+  }
+
   // 添加端口号信息
   Future<void> create() async {
     if (DioSingleton.baseUrl == '') return;

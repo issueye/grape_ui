@@ -10,31 +10,23 @@ class AppRoutes {
 
   static const String homeNamed = 'home';
   static const String loginNamed = 'login';
-  static const String ruleFormNamed = 'ruleForm';
-  static GoRouter router = GoRouter(initialLocation: loginPath, routes: [
-    GoRoute(
-      name: loginNamed,
-      path: loginPath,
-      builder: (context, state) {
-        return const LoginPage();
-      },
-    ),
-    GoRoute(
-      name: homeNamed,
-      path: homePath,
-      builder: (context, state) {
-        return const HomePage();
-      },
-    ),
-    GoRoute(
-      name: ruleFormNamed,
-      path: rulePath,
-      builder: (context, state) {
-        return RuleDialog(
-          tag: '',
-          title: '添加匹配规则',
-        );
-      },
-    ),
-  ]);
+  static GoRouter router = GoRouter(
+    initialLocation: loginPath,
+    routes: [
+      GoRoute(
+        name: loginNamed,
+        path: loginPath,
+        builder: (context, state) {
+          return const LoginPage();
+        },
+      ),
+      GoRoute(
+        name: homeNamed,
+        path: homePath,
+        builder: (context, state) {
+          return const HomePage();
+        },
+      ),
+    ],
+  );
 }

@@ -22,7 +22,7 @@ class PortStore extends ChangeNotifier {
   int operationType = 0;
 
   // 当前选择
-  int _selectIndex = 0;
+  int _selectIndex = -1;
   int get selectIndex => _selectIndex;
   set selectIndex(int index) {
     _selectIndex = index;
@@ -30,7 +30,7 @@ class PortStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  
+  int port = 0;
 
   PortStore();
 

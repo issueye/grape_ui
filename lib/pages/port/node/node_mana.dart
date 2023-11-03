@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_grape_ui/components/bar_button.dart';
 import 'package:go_grape_ui/model/node/node.dart';
-import 'package:go_grape_ui/pages/port/node_dialog.dart';
 import 'package:go_grape_ui/store/node_store.dart';
 import 'package:go_grape_ui/utils/app_theme.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../components/custom_button.dart';
-import '../../components/custom_text_field.dart';
-import '../../components/message_dialog.dart';
-import '../../components/custom_table.dart';
+import '../../../components/custom_button.dart';
+import '../../../components/custom_table.dart';
+import '../../../components/custom_text_field.dart';
+import '../../../components/message_dialog.dart';
+import '../route.dart';
+import 'dialog.dart';
+
 
 class NodeMana extends StatefulWidget {
   const NodeMana({super.key});
@@ -76,10 +79,8 @@ class _NodeManaState extends State<NodeMana> {
                   node.modifyData = data;
                   node.operationType = 1;
                   debugPrint(data.toString());
-                  var isOk = await editNode();
-                  if (isOk) {
-                    node.list();
-                  }
+                  await GoRouter.of(ctx).pushNamed(Routes.nodeFormNamed, extra: '修改节点信息');
+                  await node.list();
                 }),
             const SizedBox(width: 10),
             BarButton(
@@ -130,10 +131,7 @@ class _NodeManaState extends State<NodeMana> {
                 name: '添加',
                 onPressed: () async {
                   node.operationType = 0;
-                  var isOk = await addNode();
-                  if (isOk) {
-                    await node.list();
-                  }
+                  GoRouter.of(context).pushNamed(Routes.nodeFormNamed, extra: '添加节点信息');
                 },
               ),
             ],

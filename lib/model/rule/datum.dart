@@ -3,6 +3,7 @@ class Datum {
 	DateTime? createdAt;
 	DateTime? updatedAt;
 	String? name;
+  String? method;
 	String? portId;
 	String? nodeId;
   String? targetId;
@@ -17,6 +18,7 @@ class Datum {
 		this.createdAt, 
 		this.updatedAt, 
 		this.name, 
+    this.method,
 		this.portId, 
 		this.nodeId, 
     this.targetId,
@@ -29,7 +31,7 @@ class Datum {
 
 	@override
 	String toString() {
-		return 'Datum(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, name: $name, portId: $portId, nodeId: $nodeId, targetId: $targetId, target: $target, targetRoute: $targetRoute, matchType: $matchType, mark: $mark, port: $port)';
+		return 'Datum(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, name: $name, method: $method, portId: $portId, nodeId: $nodeId, targetId: $targetId, target: $target, targetRoute: $targetRoute, matchType: $matchType, mark: $mark, port: $port)';
 	}
 
 	factory Datum.fromJson(Map<String, dynamic> json) => Datum(
@@ -41,6 +43,7 @@ class Datum {
 						? null
 						: DateTime.parse(json['updatedAt'] as String),
 				name: json['name'] as String?,
+        method: json['method'] as String?,
 				portId: json['portId'] as String?,
 				nodeId: json['nodeId'] as String?,
         targetId: json['targetId'] as String?,
@@ -56,6 +59,7 @@ class Datum {
 				'createdAt': createdAt?.toIso8601String(),
 				'updatedAt': updatedAt?.toIso8601String(),
 				'name': name,
+        'method': method,
 				'portId': portId,
 				'nodeId': nodeId,
         'targetId': targetId,
