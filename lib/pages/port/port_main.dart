@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
 import '../../utils/app_theme.dart';
 import 'node/node_mana.dart';
-import 'port/port_mana.dart';
 import 'rule/rule_mana.dart';
 
 class PortMainPage extends StatefulWidget {

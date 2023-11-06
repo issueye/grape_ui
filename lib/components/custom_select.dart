@@ -8,6 +8,7 @@ class SelectOption {
   SelectOption(this.key, this.value);
 }
 
+// ignore: camel_case_types
 typedef valueChanged = Function(String, String)?;
 
 // ignore: must_be_immutable
@@ -33,7 +34,6 @@ class CustomSelect extends StatefulWidget {
   final TextEditingController selectData;
   bool isHaveTo;
   valueChanged? onChanged;
-  
 
   @override
   // ignore: library_private_types_in_public_api
@@ -41,7 +41,6 @@ class CustomSelect extends StatefulWidget {
 }
 
 class _CustomSelectState extends State<CustomSelect> {
-  late String _selectValue = '';
   final padding = const EdgeInsets.symmetric(vertical: 12, horizontal: 8);
 
   List<DropdownMenuItem<String>> _getItems() {
@@ -89,6 +88,7 @@ class _CustomSelectState extends State<CustomSelect> {
       );
     }
 
+    // ignore: no_leading_underscores_for_local_identifiers
     String _getItemByKey(String key) {
       for (var element in widget.data) {
         if (element.key == key) return element.value;
@@ -136,7 +136,7 @@ class _CustomSelectState extends State<CustomSelect> {
                 padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                 height: 28,
               ),
-              onChanged:(value) {
+              onChanged: (value) {
                 debugPrint('value $value');
                 var val = _getItemByKey(value.toString());
                 setState(() {
@@ -175,8 +175,7 @@ formSelectFieldItem(
   List<SelectOption> list,
   String name,
   TextEditingController control,
-  String hint,
-  {
+  String hint, {
   valueChanged onChanged,
   bool isHaveTo = false,
   int line = 1,

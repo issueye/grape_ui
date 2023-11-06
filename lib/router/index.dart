@@ -1,6 +1,5 @@
 import 'package:go_grape_ui/pages/home/index.dart';
 import 'package:go_grape_ui/pages/login/index.dart';
-import 'package:go_grape_ui/pages/port/rule/dialog.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRoutes {

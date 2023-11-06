@@ -6,7 +6,6 @@ import 'package:go_grape_ui/components/custom_divider.dart';
 import 'package:go_grape_ui/components/custom_form_text_field.dart';
 import 'package:go_grape_ui/components/default_button.dart';
 import 'package:go_grape_ui/store/cert_store.dart';
-import 'package:go_grape_ui/store/target_store.dart';
 import 'package:go_grape_ui/utils/app_theme.dart';
 import 'package:provider/provider.dart';
 
@@ -106,7 +105,7 @@ class _CertDialogState extends State<CertDialog> {
                       cert.createData.public = _public.text;
                       cert.createData.private = _private.text;
                       cert.createData.mark = _mark.text;
-                      
+
                       await cert.create();
                       await SmartDialog.dismiss(tag: widget.tag, result: true);
                     }

@@ -31,6 +31,7 @@ class AppTheme {
 
   static const double defaultTextFieldHeight = 30; // 输入框高度
   static const double defaultAppBarHeight = 40; // 标题高度
+  static BorderRadiusGeometry defaultRadius = BorderRadius.circular(4); // 默认圆角
 
   static const AppBarTheme appBarTheme = AppBarTheme(
     toolbarHeight: AppTheme.defaultAppBarHeight,
@@ -48,7 +49,8 @@ class AppTheme {
     color: AppTheme.defaultContentTextColor,
   );
 
-  static TextStyle sizeTextStyle(double size, {Color color = AppTheme.defaultContentTextColor}) {
+  static TextStyle sizeTextStyle(double size,
+      {Color color = AppTheme.defaultContentTextColor}) {
     return TextStyle(
       fontSize: size,
       fontFamily: AppTheme.defaultFontFamily,
@@ -87,7 +89,8 @@ class Resources {
     );
   }
 
-  static SvgPicture cancel2({Color color = AppTheme.successColor, double size = 10}) {
+  static SvgPicture cancel2(
+      {Color color = AppTheme.successColor, double size = 10}) {
     return SvgPicture.asset(
       'assets/svg/cancel.svg',
       // ignore: deprecated_member_use

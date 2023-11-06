@@ -77,4 +77,10 @@ class PortStore extends ChangeNotifier {
     if (DioSingleton.baseUrl == '') return;
     await PortApi.modifyState(id);
   }
+
+  // 重启
+  Future<void> reload(String id) async {
+    if (DioSingleton.baseUrl == '') return;
+    await PortApi.reload(id);
+  }
 }

@@ -1,7 +1,3 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:go_grape_ui/api/node.dart';
@@ -202,11 +198,11 @@ class _NodeDialogState extends State<NodeDialog> {
     return Row(
       children: [
         const SizedBox(width: 30),
-        SizedBox(
+        const SizedBox(
           width: 55,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: const [Text('页面', style: AppTheme.defaultTextStyle)],
+            children: [Text('页面', style: AppTheme.defaultTextStyle)],
           ),
         ),
         const SizedBox(width: 15),

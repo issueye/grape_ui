@@ -45,9 +45,9 @@ class ItemButton extends StatelessWidget {
           icon: data.state!
               ? Resources.restart()
               : Resources.restart(color: AppTheme.dangerColor),
-          tipMessage: data.state! ? '使用中，点击停用' : '停用中，点击启用',
+          tipMessage: '重启服务',
           onTap: () async {
-            await port.modifyState(data.id!);
+            await port.reload(data.id!);
             await port.list();
           },
         ),

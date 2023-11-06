@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import './apiInterceptor.dart';
-import './wrapperInterceptor.dart';
-import 'loggingInterceptor.dart';
+import 'api_interceptor.dart';
+import 'wrapper_interceptor.dart';
+// import 'loggingInterceptor.dart';
 
 class DioSingleton {
   static Dio? _dioInstance;
@@ -17,7 +17,7 @@ class DioSingleton {
     // 添加拦截器
     _dioInstance!.interceptors.add(ApiInterceptor());
     _dioInstance!.interceptors.add(WrapperInterceptor());
-    _dioInstance!.interceptors.add(LoggingInterceptor());
+    // _dioInstance!.interceptors.add(LoggingInterceptor());
     // 设置超时时间
     _dioInstance!.options.connectTimeout =
         const Duration(milliseconds: 10000); // 连接超时时间为5秒
@@ -39,12 +39,14 @@ class DioSingleton {
     }
   }
 
-  static Future<Response> uploadFile(String url, filepath, {String filename = '', Map<String, dynamic>? options}) async {
+  static Future<Response> uploadFile(String url, filepath,
+      {String filename = '', Map<String, dynamic>? options}) async {
     var d = DioSingleton.instance;
     Map<String, dynamic> data = {};
     try {
       File file = File(filepath);
-      data['upload'] = await MultipartFile.fromFile(file.path, filename: filename);
+      data['upload'] =
+          await MultipartFile.fromFile(file.path, filename: filename);
 
       if (options != null) {
         options.forEach((key, value) {

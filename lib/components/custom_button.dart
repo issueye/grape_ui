@@ -23,6 +23,7 @@ class _CustomButtonState extends State<CustomButton> {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
+        shadowColor: null,
         elevation: 0,
         backgroundColor: widget.color,
         padding: AppTheme.defaultButtonPadding,
@@ -106,8 +107,11 @@ class _RawButtonState extends State<RawButton> {
             shadowColor: MaterialStateProperty.all(widget.color), // 阴影颜色
             elevation: MaterialStateProperty.all(0), // 阴影值
             textStyle: MaterialStateProperty.all(AppTheme.defaultTextStyle),
-            shape: MaterialStateProperty.all(BeveledRectangleBorder(borderRadius: BorderRadius.circular(2))),
-            padding: MaterialStateProperty.all(const EdgeInsetsDirectional.symmetric(horizontal: 1, vertical: 1))),
+            shape: MaterialStateProperty.all(
+                BeveledRectangleBorder(borderRadius: BorderRadius.circular(2))),
+            padding: MaterialStateProperty.all(
+                const EdgeInsetsDirectional.symmetric(
+                    horizontal: 1, vertical: 1))),
         onPressed: widget.onPressed,
         child: Text(widget.name),
       ),

@@ -52,16 +52,16 @@ class _PortItemState extends State<PortItem> {
         },
         child: Consumer<PortStore>(
           builder: (context, value, child) {
+            var t = widget.isSelect
+                ? 0
+                : isHover
+                    ? 1
+                    : 2;
+
             return Container(
               decoration: BoxDecoration(
-                border: Border.all(
-                    color: _getBorderColor(widget.isSelect
-                        ? 0
-                        : isHover
-                            ? 1
-                            : 2),
-                    width: 1),
-                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: _getBorderColor(t), width: 1),
+                borderRadius: AppTheme.defaultRadius,
               ),
               child: Column(
                 children: [
