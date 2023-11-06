@@ -39,48 +39,49 @@ class _PortState extends State<Port> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        children: [
-          const SizedBox(height: 30),
-          Row(
-            children: [
-              Expanded(
-                child: CustomTextField(
-                  controller: _qryControl,
-                  hintText: '端口号',
+    return Scaffold(
+      body: Container(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          children: [
+            const SizedBox(height: 30),
+            Row(
+              children: [
+                Expanded(
+                  child: CustomTextField(
+                    controller: _qryControl,
+                    hintText: '端口号',
+                  ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              CustomButton(
-                  onPressed: () async {
-                    await port.list();
-                  },
-                  name: '查询'),
-              const SizedBox(width: 10),
-              CustomButton(
-                  onPressed: () async {
-                    port.operationType = 0;
-                    var isOk = await addPort();
-                    if (isOk) {
+                const SizedBox(width: 10),
+                CustomButton(
+                    onPressed: () async {
                       await port.list();
-                    }
-                  },
-                  name: '添加'),
-            ],
-          ),
-          const SizedBox(height: 30),
-
-          // 端口号列表
-          Expanded(
-            child: Consumer<PortStore>(
-              builder: (context, value, child) {
-                return _getPort();
-              },
+                    },
+                    name: '查询'),
+                const SizedBox(width: 10),
+                CustomButton(
+                    onPressed: () async {
+                      port.operationType = 0;
+                      var isOk = await addPort();
+                      if (isOk) {
+                        await port.list();
+                      }
+                    },
+                    name: '添加'),
+              ],
             ),
-          ),
-        ],
+            const SizedBox(height: 30),
+            // 端口号列表
+            Expanded(
+              child: Consumer<PortStore>(
+                builder: (context, value, child) {
+                  return _getPort();
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:go_grape_ui/api/node.dart';
 import 'package:go_grape_ui/components/bar_button.dart';
 import 'package:go_grape_ui/components/custom_button.dart';
 import 'package:go_grape_ui/components/custom_divider.dart';
@@ -31,6 +36,8 @@ class _NodeDialogState extends State<NodeDialog> {
   final TextEditingController _name = TextEditingController();
   final TextEditingController _target = TextEditingController();
   final TextEditingController _mark = TextEditingController();
+  final TextEditingController _pagePath = TextEditingController(text: '未上传');
+  String _fileName = '';
   int nodeType = 0;
 
   final _formKey = GlobalKey<FormState>();
@@ -118,25 +125,7 @@ class _NodeDialogState extends State<NodeDialog> {
             ),
             const SizedBox(height: 30),
             // 页面上传
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 400,
-                  height: 200,
-                  child: DottedBorder(
-                    borderType: BorderType.RRect,
-                    radius: Radius.circular(12),
-                    padding: EdgeInsets.all(6),
-                    child: const Center(
-                      child: Text('拖拽页面打包文件到此处上传文件',
-                          style: AppTheme.defaultTextStyle),
-                    ),
-                  ),
-                ),
-                const Spacer(),
-              ],
-            ),
+            _itemStaticPage(node.operationType, node),
             const Spacer(),
             Row(
               children: [
@@ -193,7 +182,7 @@ class _NodeDialogState extends State<NodeDialog> {
           child: CustomGroupRadio(
             items: const ['接口', '页面'],
             title: '节点类型',
-            titleWidth: 65,
+            titleWidth: 55,
             isHaveTo: true,
             group: nodeType,
             onChanged: (val) {
@@ -205,22 +194,81 @@ class _NodeDialogState extends State<NodeDialog> {
     );
   }
 
-  _item(String name, TextEditingController control, String hint,
-      {bool isHaveTo = false, int line = 1}) {
+  _itemStaticPage(int t, NodeStore node) {
+    if (t == 0) {
+      return Container();
+    }
+
     return Row(
       children: [
         const SizedBox(width: 30),
-        Expanded(
-          child: CustomFormTextField(
-            controller: control,
-            title: name,
-            titleWidth: 65,
-            hintText: hint,
-            isHaveTo: isHaveTo,
-            lines: line,
+        SizedBox(
+          width: 55,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: const [Text('页面', style: AppTheme.defaultTextStyle)],
           ),
         ),
-        const SizedBox(width: 30),
+        const SizedBox(width: 15),
+        Row(
+          children: [
+            CustomButton(
+              name: '选择',
+              onPressed: () async {
+                FilePickerResult? result = await FilePicker.platform.pickFiles(
+                  lockParentWindow: true,
+                );
+                if (result != null) {
+                  PlatformFile file = result.files.single;
+                  debugPrint('file = $file');
+                  _fileName = file.name;
+                  setState(() {
+                    _pagePath.text = file.path!;
+                  });
+                }
+              },
+            ),
+            const SizedBox(width: 10),
+            CustomButton(
+              name: '上传',
+              onPressed: () async {
+                var res = await NodeApi.upload(
+                  _pagePath.text,
+                  _fileName,
+                  options: {
+                    'node_id': node.modifyData.id,
+                    'port_id': node.portId,
+                  },
+                );
+                debugPrint('返回消息  ${res.message}');
+              },
+            ),
+            const SizedBox(width: 30),
+          ],
+        ),
+        Expanded(
+          child: Tooltip(
+            preferBelow: false,
+            verticalOffset: 8,
+            message: _pagePath.text,
+            child: Text(
+              _pagePath.text,
+              overflow: TextOverflow.ellipsis,
+              style: AppTheme.sizeTextStyle(11, color: AppTheme.dangerColor),
+            ),
+          ),
+        ),
+        _pagePath.text != '未上传'
+            ? BarButton(
+                icon: Resources.cancel2(color: AppTheme.dangerColor, size: 11),
+                onTap: () {
+                  setState(() {
+                    _pagePath.text = '未上传';
+                  });
+                },
+              )
+            : Container(),
+        const Spacer(),
       ],
     );
   }

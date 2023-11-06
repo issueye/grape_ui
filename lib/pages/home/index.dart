@@ -2,7 +2,7 @@ import 'package:go_grape_ui/components/menu/menu.dart';
 import 'package:go_grape_ui/pages/about/index.dart';
 import 'package:go_grape_ui/pages/cert/cert_mana.dart';
 import 'package:go_grape_ui/pages/home/win_title.dart';
-import 'package:go_grape_ui/pages/port/index.dart';
+import 'package:go_grape_ui/pages/port/main.dart';
 import 'package:go_grape_ui/pages/settings/index.dart';
 import 'package:flutter/material.dart';
 import 'package:go_grape_ui/pages/target/target_mana.dart';
@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
   final PageController _selectControl = PageController();
 
   final List pages = [
-    const PortMana(),
+    const PortMain(),
     const TargetMana(),
     const CertMana(),
     const SettingsPage(),

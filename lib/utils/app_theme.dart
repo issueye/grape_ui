@@ -87,6 +87,16 @@ class Resources {
     );
   }
 
+  static SvgPicture cancel2({Color color = AppTheme.successColor, double size = 10}) {
+    return SvgPicture.asset(
+      'assets/svg/cancel.svg',
+      // ignore: deprecated_member_use
+      color: color,
+      width: size,
+      height: size,
+    );
+  }
+
   static SvgPicture start({Color color = AppTheme.successColor}) {
     return SvgPicture.asset(
       'assets/svg/start.svg',

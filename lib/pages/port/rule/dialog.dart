@@ -13,12 +13,14 @@ import 'package:go_grape_ui/utils/app_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
 // ignore: must_be_immutable
 class RuleDialog extends StatefulWidget {
   RuleDialog({
     super.key,
     required this.title,
-    required this.port,
+    required this.port, 
   });
   String title;
   int port;
@@ -36,8 +38,6 @@ class _RuleDialogState extends State<RuleDialog> {
   final TextEditingController _targetRoute = TextEditingController();
   final TextEditingController _method = TextEditingController(text: 'ANY');
   final TextEditingController _mark = TextEditingController();
-
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   late PortStore port;
   late TargetStore target;
@@ -83,148 +83,148 @@ class _RuleDialogState extends State<RuleDialog> {
     }
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4),
-          color: Colors.white,
-        ),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 30,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  const SizedBox(width: 10),
-                  Text(widget.title, style: AppTheme.sizeTextStyle(16)),
-                  const Spacer(),
-                  BarButton(
-                      icon: Resources.cancel,
-                      onTap: () {
-                        GoRouter.of(context).pop();
-                      }),
-                  const SizedBox(width: 10),
-                ],
+        body: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            color: Colors.white,
+          ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 30,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const SizedBox(width: 10),
+                    Text(widget.title, style: AppTheme.sizeTextStyle(16)),
+                    const Spacer(),
+                    BarButton(
+                        icon: Resources.cancel,
+                        onTap: () {
+                          GoRouter.of(context).pop();
+                        }),
+                    const SizedBox(width: 10),
+                  ],
+                ),
               ),
-            ),
-            const CustomDivider(),
-            const SizedBox(height: 30),
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  formFieldItem('匹配规则', _name, '请填写匹配规则', isHaveTo: true),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: formFieldItem('端口号', _port, '请选择端口号',
-                            isHaveTo: true, enabled: false),
-                      ),
-                      Expanded(
-                        child: formSelectFieldItem(
-                            methods, '请求方法', _method, '请选择请求方法',
+              const CustomDivider(),
+              const SizedBox(height: 30),
+              Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    formFieldItem('匹配规则', _name, '请填写匹配规则', isHaveTo: true),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: formFieldItem('端口号', _port, '请选择端口号',
+                              isHaveTo: true, enabled: false),
+                        ),
+                        Expanded(
+                          child: formSelectFieldItem(
+                              methods, '请求方法', _method, '请选择请求方法',
+                              onChanged: (key, value) {
+                            _method.text = value.toString();
+                          }, isHaveTo: true),
+                        ),
+                      ],
+                    ),
+                    Consumer<NodeStore>(
+                      builder: (context, value, child) {
+                        List<SelectOption> list = [];
+
+                        if (value.data != null) {
+                          for (var element in value.data!.data!) {
+                            list.add(
+                              SelectOption(element.id!, element.name!),
+                            );
+                          }
+                        }
+
+                        return formSelectFieldItem(list, '节点', _node, '请选择节点',
                             onChanged: (key, value) {
-                          _method.text = value.toString();
-                        }, isHaveTo: true),
-                      ),
-                    ],
-                  ),
-                  Consumer<NodeStore>(
-                    builder: (context, value, child) {
-                      List<SelectOption> list = [];
+                          _node.text = value.toString();
+                        });
+                      },
+                    ),
+                    Consumer<TargetStore>(
+                      builder: (context, value, child) {
+                        List<SelectOption> list = [];
 
-                      if (value.data != null) {
-                        for (var element in value.data!.data!) {
-                          list.add(
-                            SelectOption(element.id!, element.name!),
-                          );
+                        if (value.data != null) {
+                          for (var element in value.data!.data!) {
+                            list.add(
+                              SelectOption(element.id!, element.name!),
+                            );
+                          }
                         }
-                      }
 
-                      return formSelectFieldItem(list, '节点', _node, '请选择节点',
-                          onChanged: (key, value) {
-                        _node.text = value.toString();
-                      });
+                        return formSelectFieldItem(
+                            list, '目标地址', _target, '请选择目标地址',
+                            onChanged: (key, value) {
+                          _target.text = value.toString();
+                        }, isHaveTo: true);
+                      },
+                    ),
+                    formFieldItem('目标路由', _targetRoute, '请填写目标路由'),
+                    formFieldItem('备注', _mark, '请填写备注', line: 3),
+                  ],
+                ),
+              ),
+              const Spacer(),
+              Row(
+                children: [
+                  const Spacer(),
+                  PlainButton(
+                    name: '关闭',
+                    onPressed: () {
+                      GoRouter.of(context).pop();
                     },
                   ),
-                  Consumer<TargetStore>(
-                    builder: (context, value, child) {
-                      List<SelectOption> list = [];
-
-                      if (value.data != null) {
-                        for (var element in value.data!.data!) {
-                          list.add(
-                            SelectOption(element.id!, element.name!),
-                          );
+                  const SizedBox(width: 10),
+                  CustomButton(
+                    name: '确定',
+                    onPressed: () async {
+                      final form = formKey.currentState!;
+                      if (form.validate()) {
+                        if (rule.operationType == 0) {
+                          rule.createData.name = _name.text;
+                          rule.createData.mark = _mark.text;
+                          rule.createData.method = _method.text;
+                          rule.createData.portId = port.selectData.id;
+                          rule.createData.nodeId = node.getIdByName(_node.text);
+                          rule.createData.targetId =
+                              target.getIdByName(_target.text);
+                          rule.createData.targetRoute = _targetRoute.text;
+                          await rule.create();
                         }
-                      }
 
-                      return formSelectFieldItem(
-                          list, '目标地址', _target, '请选择目标地址',
-                          onChanged: (key, value) {
-                        _target.text = value.toString();
-                      }, isHaveTo: true);
+                        if (rule.operationType == 1) {
+                          rule.modifyData.name = _name.text;
+                          rule.modifyData.mark = _mark.text;
+                          rule.modifyData.method = _method.text;
+                          rule.modifyData.portId = port.selectData.id;
+                          rule.modifyData.nodeId = node.getIdByName(_node.text);
+                          rule.modifyData.targetId =
+                              target.getIdByName(_target.text);
+                          rule.modifyData.targetRoute = _targetRoute.text;
+                          debugPrint('修改信息: ${rule.modifyData}');
+                          await rule.modify();
+                        }
+
+                        await rule.list();
+                        // ignore: use_build_context_synchronously
+                        GoRouter.of(context).pop();
+                      }
                     },
                   ),
-                  formFieldItem('目标路由', _targetRoute, '请填写目标路由'),
-                  formFieldItem('备注', _mark, '请填写备注', line: 3),
+                  const SizedBox(width: 10),
                 ],
               ),
-            ),
-            const Spacer(),
-            Row(
-              children: [
-                const Spacer(),
-                PlainButton(
-                  name: '关闭',
-                  onPressed: () {
-                    GoRouter.of(context).pop();
-                  },
-                ),
-                const SizedBox(width: 10),
-                CustomButton(
-                  name: '确定',
-                  onPressed: () async {
-                    final form = _formKey.currentState!;
-                    if (form.validate()) {
-                      if (rule.operationType == 0) {
-                        rule.createData.name = _name.text;
-                        rule.createData.mark = _mark.text;
-                        rule.createData.method = _method.text;
-                        rule.createData.portId = port.selectData.id;
-                        rule.createData.nodeId = node.getIdByName(_node.text);
-                        rule.createData.targetId =
-                            target.getIdByName(_target.text);
-                        rule.createData.targetRoute = _targetRoute.text;
-                        await rule.create();
-                      }
-
-                      if (rule.operationType == 1) {
-                        rule.modifyData.name = _name.text;
-                        rule.modifyData.mark = _mark.text;
-                        rule.modifyData.method = _method.text;
-                        rule.modifyData.portId = port.selectData.id;
-                        rule.modifyData.nodeId = node.getIdByName(_node.text);
-                        rule.modifyData.targetId =
-                            target.getIdByName(_target.text);
-                        rule.modifyData.targetRoute = _targetRoute.text;
-                        debugPrint('修改信息: ${rule.modifyData}');
-                        await rule.modify();
-                      }
-
-                      await rule.list();
-                      // ignore: use_build_context_synchronously
-                      GoRouter.of(context).pop();
-                    }
-                  },
-                ),
-                const SizedBox(width: 10),
-              ],
-            ),
-            const SizedBox(height: 10),
-          ],
+              const SizedBox(height: 10),
+            ],
+          ),
         ),
-      ),
-    );
+      );
   }
 }

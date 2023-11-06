@@ -12,8 +12,6 @@ import '../../../components/message_dialog.dart';
 import '../../../components/custom_table.dart';
 import '../route.dart';
 
-
-
 class RuleMana extends StatefulWidget {
   const RuleMana({super.key});
 
@@ -27,7 +25,7 @@ class _RuleManaState extends State<RuleMana> {
   static final Map<String, Color> methodColors = {
     'GET': Colors.blue.shade800,
     'POST': Colors.green.shade800,
-    'PUT':  Colors.yellow.shade800,
+    'PUT': Colors.yellow.shade800,
     'DELETE': Colors.red.shade800,
     'PATCH': Colors.yellow.shade300,
     'ANY': Colors.teal.shade800,
@@ -161,7 +159,9 @@ flag(dynamic value, {Color? color = AppTheme.successColor}) {
       width: 50,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(2),
-        color: color == null ? Colors.teal.shade800.withOpacity(0.8) : color.withOpacity(0.8),
+        color: color == null
+            ? Colors.teal.shade800.withOpacity(0.8)
+            : color.withOpacity(0.8),
       ),
       child: Align(
         alignment: Alignment.center,
@@ -173,5 +173,3 @@ flag(dynamic value, {Color? color = AppTheme.successColor}) {
     ),
   );
 }
-
-

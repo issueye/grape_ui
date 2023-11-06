@@ -37,4 +37,11 @@ class NodeApi {
     var res = await DioSingleton.putData(url, reqData);
     return ResMessage.fromJson(res.data);
   }
+
+  // 上传静态页面
+  static Future<ResMessage> upload(String filepath, String filename, {Map<String, dynamic>? options}) async {
+    String url = '/api/v1/node/upload';
+    var res = await DioSingleton.uploadFile(url, filepath, filename: filename, options: options);
+    return ResMessage.fromJson(res.data);
+  }
 }

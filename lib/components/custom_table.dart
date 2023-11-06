@@ -52,7 +52,16 @@ class _CustomTableState extends State<CustomTable> {
       // height: 450,
       child: Column(
         children: [
-          Row(children: _getHeader()),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              double maxWidth = constraints.maxWidth;
+              if (maxWidth > 400) {
+                return Row(children: _getHeader());
+              } else {
+                return Container();
+              }
+            },
+          ),
           const CustomDivider(space: 5),
           Expanded(
             child: Consumer<NodeStore>(
@@ -64,7 +73,16 @@ class _CustomTableState extends State<CustomTable> {
                 return ListView.builder(
                   itemCount: rows.length,
                   itemBuilder: (context, index) {
-                    return rows[index];
+                    return LayoutBuilder(
+                      builder: (context, constraints) {
+                        double maxWidth = constraints.maxWidth;
+                        if (maxWidth > 400) {
+                          return rows[index];
+                        } else {
+                          return Container();
+                        }
+                      },
+                    );
                   },
                 );
               },
@@ -164,5 +182,3 @@ class _CustomTableState extends State<CustomTable> {
     return width == null ? Expanded(child: contain) : contain;
   }
 }
-
-

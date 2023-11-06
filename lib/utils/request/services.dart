@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import './apiInterceptor.dart';
 import './wrapperInterceptor.dart';
@@ -34,6 +36,33 @@ class DioSingleton {
       return response;
     } catch (error) {
       throw Exception('Failed to fetch data');
+    }
+  }
+
+  static Future<Response> uploadFile(String url, filepath, {String filename = '', Map<String, dynamic>? options}) async {
+    var d = DioSingleton.instance;
+    Map<String, dynamic> data = {};
+    try {
+      File file = File(filepath);
+      data['upload'] = await MultipartFile.fromFile(file.path, filename: filename);
+
+      if (options != null) {
+        options.forEach((key, value) {
+          data[key] = value;
+        });
+      }
+
+      FormData formData = FormData.fromMap(data);
+      final response = await d.post(
+        url,
+        data: formData,
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+        ),
+      );
+      return response;
+    } catch (error) {
+      throw Exception('Failed to post data');
     }
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 
+
 Future<void> initWindowsManager() async {
   await windowManager.ensureInitialized();
 
@@ -16,3 +17,4 @@ Future<void> initWindowsManager() async {
     await windowManager.focus();
   });
 }
+

@@ -104,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                 CustomButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        await windowManager.setSize(const Size(1200, 800));
+                        await windowManager.setSize(const Size(1280, 750));
                         await windowManager.center();
                         // ignore: use_build_context_synchronously
                         GoRouter.of(context).pushNamed(AppRoutes.homeNamed);

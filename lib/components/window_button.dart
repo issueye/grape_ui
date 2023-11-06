@@ -96,10 +96,11 @@ class _LogoutButtonState extends State<LogoutButton> {
       hoverIconColor: Colors.white,
       tips: '退出登录',
       onTap: () async {
+        // ignore: use_build_context_synchronously
+        // GoRouter.of(context).pushReplacementNamed(AppRoutes.loginNamed);
+        GoRouter.of(context).pop();
         await windowManager.setSize(const Size(800, 500));
         await windowManager.center();
-        // ignore: use_build_context_synchronously
-        GoRouter.of(context).pushNamed(AppRoutes.loginNamed);
       },
     );
   }

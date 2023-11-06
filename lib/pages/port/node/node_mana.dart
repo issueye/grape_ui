@@ -11,7 +11,6 @@ import '../../../components/custom_table.dart';
 import '../../../components/custom_text_field.dart';
 import '../../../components/message_dialog.dart';
 import '../route.dart';
-import 'dialog.dart';
 
 
 class NodeMana extends StatefulWidget {
@@ -60,6 +59,7 @@ class _NodeManaState extends State<NodeMana> {
       },
     ),
     FieldInfo(title: '目标地址', name: 'target', clip: true),
+    FieldInfo(title: '访问路径', name: 'pagePath', clip: true),
     FieldInfo(title: '备注', name: 'mark'),
     FieldInfo(
       title: '操作',
