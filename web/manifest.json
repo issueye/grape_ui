@@ -1,6 +1,6 @@
 {
-    "name": "app_template",
-    "short_name": "app_template",
+    "name": "grape_ui",
+    "short_name": "grape_ui",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

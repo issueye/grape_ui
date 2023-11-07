@@ -80,6 +80,7 @@ class Resources {
   static SvgPicture delete = SvgPicture.asset('assets/svg/delete.svg');
   static SvgPicture edit = SvgPicture.asset('assets/svg/edit.svg');
   static SvgPicture cancel = SvgPicture.asset('assets/svg/cancel.svg');
+  static SvgPicture copy = SvgPicture.asset('assets/svg/copy.svg');
   static SvgPicture stop({Color color = AppTheme.dangerColor}) {
     return SvgPicture.asset(
       'assets/svg/stop.svg',
