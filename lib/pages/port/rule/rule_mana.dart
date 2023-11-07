@@ -47,8 +47,9 @@ class _RuleManaState extends State<RuleMana> {
         return flag(value, color: methodColors[value.toString()]);
       },
     ),
+    FieldInfo(title: '节点', name: 'node', width: 130),
     FieldInfo(title: '目标地址', name: 'target', clip: true),
-    FieldInfo(title: '目标路由', name: 'targetRoute', clip: true),
+    FieldInfo(title: '目标路由', name: 'targetRoute', clip: true), 
     FieldInfo(title: '备注', name: 'mark'),
     FieldInfo(
       title: '操作',

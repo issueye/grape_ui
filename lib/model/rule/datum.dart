@@ -7,6 +7,7 @@ class Datum {
 	String? portId;
 	String? nodeId;
   String? targetId;
+  String? node;
   String? target;
   String? targetRoute;
 	int? matchType;
@@ -22,6 +23,7 @@ class Datum {
 		this.portId, 
 		this.nodeId, 
     this.targetId,
+    this.node,
     this.target,
     this.targetRoute,
 		this.matchType, 
@@ -31,7 +33,7 @@ class Datum {
 
 	@override
 	String toString() {
-		return 'Datum(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, name: $name, method: $method, portId: $portId, nodeId: $nodeId, targetId: $targetId, target: $target, targetRoute: $targetRoute, matchType: $matchType, mark: $mark, port: $port)';
+		return 'Datum(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, name: $name, method: $method, portId: $portId, nodeId: $nodeId, targetId: $targetId, node: $node, target: $target, targetRoute: $targetRoute, matchType: $matchType, mark: $mark, port: $port)';
 	}
 
 	factory Datum.fromJson(Map<String, dynamic> json) => Datum(
@@ -47,6 +49,7 @@ class Datum {
 				portId: json['portId'] as String?,
 				nodeId: json['nodeId'] as String?,
         targetId: json['targetId'] as String?,
+        node: json['node'] as String?,
         target: json['target'] as String?,
         targetRoute: json['targetRoute'] as String?,
 				matchType: json['matchType'] as int?,
@@ -54,7 +57,7 @@ class Datum {
 				port: json['port'] as int?,
 			);
 
-	Map<String, dynamic> toJson() => {
+	Map<String, dynamic> toJson() => { 
 				'id': id,
 				'createdAt': createdAt?.toIso8601String(),
 				'updatedAt': updatedAt?.toIso8601String(),
@@ -63,6 +66,7 @@ class Datum {
 				'portId': portId,
 				'nodeId': nodeId,
         'targetId': targetId,
+        'node': node,
         'target': target,
         'targetRoute': targetRoute,
 				'matchType': matchType,

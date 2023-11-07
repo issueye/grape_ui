@@ -34,6 +34,9 @@ class NodeStore extends ChangeNotifier {
     notifyListeners();
   }
 
+  // 上传文件路径
+  String uploadFile = '';
+
   NodeStore();
 
   // 长度

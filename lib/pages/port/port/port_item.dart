@@ -43,7 +43,7 @@ class _PortItemState extends State<PortItem> {
       padding: const EdgeInsets.only(top: 5, bottom: 5),
       child: InkWell(
         hoverColor: const Color.fromARGB(166, 240, 239, 242),
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: AppTheme.mainRadius,
         onTap: widget.onSelect,
         onHover: (value) {
           setState(() {

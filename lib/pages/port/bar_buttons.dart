@@ -16,10 +16,10 @@ class ItemButton extends StatelessWidget {
   final SizedBox _cardTileSpace = const SizedBox(width: 10);
   final _radius = const BorderRadius.all(Radius.circular(5));
 
-  _roundDot(bool state) {
+  _roundDot(bool state, {double size = 10}) {
     return Container(
-      width: 10,
-      height: 10,
+      width: size,
+      height: size,
       decoration: BoxDecoration(
         color: state ? AppTheme.successColor : AppTheme.dangerColor,
         borderRadius: _radius,
@@ -34,10 +34,10 @@ class ItemButton extends StatelessWidget {
     return Row(
       children: [
         _cardTileSpace,
-        _roundDot(data.state!),
+        _roundDot(data.state!, size: 8),
         _cardTileSpace,
         Text(
-          '端口号 ${data.port.toString()}',
+          data.port.toString(),
           style: AppTheme.sizeTextStyle(16),
         ),
         const Spacer(),
@@ -67,7 +67,9 @@ class ItemButton extends StatelessWidget {
             icon: Resources.delete,
             tipMessage: '删除',
             onTap: () async {
-              await showMessageBox('删除', '''是否删除 ${data.port.toString()} ?''')
+              await showMessageBox('删除', '''
+      删除端口将删除端口下的所有匹配规则
+      和节点，是否删除端口 ${data.port.toString()} ?''')
                   .then((value) async {
                 if (value) {
                   await port.delete(data.id!);

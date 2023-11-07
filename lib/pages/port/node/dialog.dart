@@ -7,6 +7,7 @@ import 'package:go_grape_ui/components/custom_divider.dart';
 import 'package:go_grape_ui/components/custom_form_text_field.dart';
 import 'package:go_grape_ui/components/custom_group_radio.dart';
 import 'package:go_grape_ui/components/default_button.dart';
+import 'package:go_grape_ui/pages/port/node/upload.dart';
 import 'package:go_grape_ui/store/node_store.dart';
 import 'package:go_grape_ui/store/port_store.dart';
 import 'package:go_grape_ui/store/target_store.dart';
@@ -32,7 +33,7 @@ class _NodeDialogState extends State<NodeDialog> {
   final TextEditingController _name = TextEditingController();
   final TextEditingController _target = TextEditingController();
   final TextEditingController _mark = TextEditingController();
-  final TextEditingController _pagePath = TextEditingController(text: '未上传');
+  final TextEditingController _pagePath = TextEditingController();
   String _fileName = '';
   int nodeType = 0;
 
@@ -58,10 +59,13 @@ class _NodeDialogState extends State<NodeDialog> {
     var port = Provider.of<PortStore>(context);
 
     if (node.operationType == 1) {
-      _name.text = node.modifyData.name!;
-      _target.text = node.modifyData.target!;
-      _mark.text = node.modifyData.mark!;
+      _name.text = node.modifyData.name.toString();
+      _target.text = node.modifyData.target.toString();
+      _mark.text = node.modifyData.mark.toString();
       nodeType = node.modifyData.nodeType!;
+      var path = node.modifyData.pagePath.toString();
+      _pagePath.text = path;
+      debugPrint('build -----123');
     }
 
     return Scaffold(
@@ -100,7 +104,6 @@ class _NodeDialogState extends State<NodeDialog> {
                   Consumer<TargetStore>(
                     builder: (context, value, child) {
                       List<SelectOption> list = [];
-
                       if (value.data != null) {
                         for (var element in value.data!.data!) {
                           list.add(
@@ -108,11 +111,12 @@ class _NodeDialogState extends State<NodeDialog> {
                           );
                         }
                       }
-
-                      return formSelectFieldItem(list, '目标地址', _target, '目标地址',
+                      child = formSelectFieldItem(list, '目标地址', _target, '目标地址',
                           onChanged: (key, value) {
                         _target.text = value.toString();
                       });
+
+                      return child!;
                     },
                   ),
                   formFieldItem('备注', _mark, '请填写备注', line: 3),
@@ -151,6 +155,7 @@ class _NodeDialogState extends State<NodeDialog> {
                         node.modifyData.nodeType = nodeType;
                         node.modifyData.target = _target.text;
                         node.modifyData.mark = _mark.text;
+                        node.modifyData.pagePath = _pagePath.text;
                         await node.modify();
                       }
 
@@ -198,73 +203,20 @@ class _NodeDialogState extends State<NodeDialog> {
     return Row(
       children: [
         const SizedBox(width: 30),
-        const SizedBox(
+        SizedBox(
           width: 55,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: [Text('页面', style: AppTheme.defaultTextStyle)],
+            children: const [Text('页面', style: AppTheme.defaultTextStyle)],
           ),
         ),
         const SizedBox(width: 15),
-        Row(
-          children: [
-            CustomButton(
-              name: '选择',
-              onPressed: () async {
-                FilePickerResult? result = await FilePicker.platform.pickFiles(
-                  lockParentWindow: true,
-                );
-                if (result != null) {
-                  PlatformFile file = result.files.single;
-                  debugPrint('file = $file');
-                  _fileName = file.name;
-                  setState(() {
-                    _pagePath.text = file.path!;
-                  });
-                }
-              },
-            ),
-            const SizedBox(width: 10),
-            CustomButton(
-              name: '上传',
-              onPressed: () async {
-                var res = await NodeApi.upload(
-                  _pagePath.text,
-                  _fileName,
-                  options: {
-                    'node_id': node.modifyData.id,
-                    'port_id': node.portId,
-                  },
-                );
-                debugPrint('返回消息  ${res.message}');
-              },
-            ),
-            const SizedBox(width: 30),
-          ],
+        // 上传
+        UploadFile(
+          controller: _pagePath,
+          portId: node.portId,
+          nodeId: node.modifyData.id!,
         ),
-        Expanded(
-          child: Tooltip(
-            preferBelow: false,
-            verticalOffset: 8,
-            message: _pagePath.text,
-            child: Text(
-              _pagePath.text,
-              overflow: TextOverflow.ellipsis,
-              style: AppTheme.sizeTextStyle(11, color: AppTheme.dangerColor),
-            ),
-          ),
-        ),
-        _pagePath.text != '未上传'
-            ? BarButton(
-                icon: Resources.cancel2(color: AppTheme.dangerColor, size: 11),
-                onTap: () {
-                  setState(() {
-                    _pagePath.text = '未上传';
-                  });
-                },
-              )
-            : Container(),
-        const Spacer(),
       ],
     );
   }

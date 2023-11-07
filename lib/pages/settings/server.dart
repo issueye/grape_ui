@@ -31,8 +31,8 @@ class _ServerSettingsPageState extends State<ServerSettingsPage> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Row(
-          children: [
+        Row(
+          children: const [
             Expanded(
               child: CustomDivider(),
             ),

@@ -73,8 +73,7 @@ class AppTheme {
   static const EdgeInsetsGeometry defaultTextFieldContentPadding =
       EdgeInsets.symmetric(horizontal: 8, vertical: 10); //
 
-  static const BorderRadius mainRadius =
-      BorderRadius.all(Radius.circular(2)); // 圆角
+  static const BorderRadius mainRadius = BorderRadius.all(Radius.circular(2)); // 圆角
 }
 
 class Resources {
