@@ -142,6 +142,7 @@ class _CustomSelectState extends State<CustomSelect> {
                 setState(() {
                   widget.selectData.text = val;
                 });
+                widget.onChanged!(val, value.toString());
               },
               customButton: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

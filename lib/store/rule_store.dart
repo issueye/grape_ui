@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_grape_ui/api/rule.dart';
+import 'package:go_grape_ui/components/custom_toast.dart';
 import 'package:go_grape_ui/model/rule/rule_info.dart';
 import '../model/rule/datum.dart';
 import '../utils/request/services.dart';
@@ -55,26 +56,44 @@ class RuleStore extends ChangeNotifier {
   }
 
   // 添加端口号信息
-  Future<void> create() async {
-    if (DioSingleton.baseUrl == '') return;
+  Future<bool> create() async {
+    if (DioSingleton.baseUrl == '') return false;
     modifyData.portId = portId;
-    await RuleApi.create(createData);
+    var res = await RuleApi.create(createData);
+    if (res.code != 200) {
+      Toast.Error(res.message.toString());
+      return false;
+    } else {
+      Toast.Success(res.message.toString());
+      return true;
+    }
   }
 
   // 获取列表
-  Future<void> list({String? condition}) async {
+  Future<void> list({String? condition, int? matchType}) async {
     if (DioSingleton.baseUrl == '') return;
     var res = await RuleApi.getList(
-      params: {'portId': _portId, 'condition': condition},
+      params: {
+        'portId': _portId, 
+        'condition': condition,
+        'matchType': matchType,
+        },
     );
     data = res;
   }
 
   // 修改信息
-  Future<void> modify() async {
-    if (DioSingleton.baseUrl == '') return;
+  Future<bool> modify() async {
+    if (DioSingleton.baseUrl == '') return false;
     modifyData.portId = portId;
-    await RuleApi.modify(modifyData);
+    var res = await RuleApi.modify(modifyData);
+    if (res.code != 200) {
+      Toast.Error(res.message.toString());
+      return false;
+    } else {
+      Toast.Success(res.message.toString());
+      return true;
+    }
   }
 
   // 删除信息

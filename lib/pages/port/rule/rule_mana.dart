@@ -31,6 +31,11 @@ class _RuleManaState extends State<RuleMana> {
     'ANY': Colors.teal.shade800,
   };
 
+  static final Map<String, Color> matchTypeColors = {
+    'GIN匹配': Colors.green.shade800,
+    'MUX匹配': Colors.red.shade800,
+  };
+
   @override
   void initState() {
     super.initState();
@@ -47,9 +52,18 @@ class _RuleManaState extends State<RuleMana> {
         return flag(value, color: methodColors[value.toString()]);
       },
     ),
-    FieldInfo(title: '节点', name: 'node', width: 130),
+    FieldInfo(
+      title: '匹配类型',
+      name: 'matchType',
+      width: 80,
+      titleCenter: true,
+      child: (ctx, index, value) {
+        var val = value.toString() == '1'? 'GIN匹配' : 'MUX匹配';
+        return flag(val, color: matchTypeColors[val]);
+      },
+    ),
     FieldInfo(title: '目标地址', name: 'target', clip: true),
-    FieldInfo(title: '目标路由', name: 'targetRoute', clip: true), 
+    FieldInfo(title: '目标路由', name: 'targetRoute', clip: true),
     FieldInfo(title: '备注', name: 'mark'),
     FieldInfo(
       title: '操作',
@@ -118,7 +132,7 @@ class _RuleManaState extends State<RuleMana> {
                 CustomButton(
                   name: '查询',
                   onPressed: () async {
-                    await rule.list(condition: _qryControl.text);
+                    await rule.list(condition: _qryControl.text, matchType: 0);
                   },
                 ),
                 const SizedBox(width: 10),

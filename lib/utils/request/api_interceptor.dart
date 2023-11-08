@@ -23,10 +23,10 @@ class ApiInterceptor extends Interceptor {
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     // 在收到响应后的处理
     // 可以在此处处理响应数据、错误状态码等
-    var res = ResMessage.fromJson(response.data);
-    if (res.code != 200) {
-      Toast.Error(res.message!);
-    }
+    // var res = ResMessage.fromJson(response.data);
+    // if (res.code != 200) {
+    //   Toast.Error(res.message!);
+    // }
 
     super.onResponse(response, handler);
   }

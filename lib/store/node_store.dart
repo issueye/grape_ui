@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_grape_ui/api/node.dart';
+import 'package:go_grape_ui/components/custom_toast.dart';
 import '../model/node/datum.dart';
 import '../model/node/node.dart';
+import '../model/res_message.dart';
 import '../utils/request/services.dart';
 
 class NodeStore extends ChangeNotifier {
@@ -63,7 +65,7 @@ class NodeStore extends ChangeNotifier {
     for (var i = 0; i < list.length; i++) {
       if (list[i].name == name) {
         return list[i].id!;
-      } 
+      }
     }
 
     return '';
@@ -80,17 +82,17 @@ class NodeStore extends ChangeNotifier {
     for (var i = 0; i < list.length; i++) {
       if (list[i].id == id) {
         return list[i].name!;
-      } 
+      }
     }
 
     return '';
   }
 
   // 添加端口号信息
-  Future<void> create() async {
-    if (DioSingleton.baseUrl == '') return;
+  Future<ResMessage?> create() async {
+    if (DioSingleton.baseUrl == '') return null;
     modifyData.portId = portId;
-    await NodeApi.create(createData);
+    return await NodeApi.create(createData);
   }
 
   // 获取列表
@@ -103,10 +105,10 @@ class NodeStore extends ChangeNotifier {
   }
 
   // 修改信息
-  Future<void> modify() async {
-    if (DioSingleton.baseUrl == '') return;
+  Future<ResMessage?> modify() async {
+    if (DioSingleton.baseUrl == '') return null;
     modifyData.portId = portId;
-    await NodeApi.modify(modifyData);
+    return await NodeApi.modify(modifyData);
   }
 
   // 删除信息

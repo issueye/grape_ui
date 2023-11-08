@@ -1,7 +1,6 @@
 // 端口号管理
 import 'package:go_grape_ui/model/node/node.dart';
 
-import '../components/custom_toast.dart';
 import '../model/node/datum.dart';
 import '../model/res_message.dart';
 import '../utils/request/services.dart';
@@ -13,13 +12,6 @@ class NodeApi {
     var reqData = data.toJson();
     var res = await DioSingleton.postData(url, reqData);
     var resData = ResMessage.fromJson(res.data);
-
-    if (resData.code != 200) {
-      Toast.Error(resData.message!);
-    } else {
-      Toast.Success(resData.message!);
-    }
-
     return resData;
   }
 
@@ -28,13 +20,6 @@ class NodeApi {
     String url = '/api/v1/node';
     var res = await DioSingleton.getData(url, params: params);
     var resData = Node.fromJson(res.data);
-
-    if (resData.code != 200) {
-      Toast.Error(resData.message!);
-    } else {
-      Toast.Success(resData.message!);
-    }
-
     return resData;
   }
 
@@ -43,13 +28,6 @@ class NodeApi {
     String url = '/api/v1/node/$id';
     var res = await DioSingleton.deleteData(url);
     var resData = ResMessage.fromJson(res.data);
-
-    if (resData.code != 200) {
-      Toast.Error(resData.message!);
-    } else {
-      Toast.Success(resData.message!);
-    }
-
     return resData;
   }
 
@@ -59,13 +37,6 @@ class NodeApi {
     var reqData = data.toJson();
     var res = await DioSingleton.putData(url, reqData);
     var resData = ResMessage.fromJson(res.data);
-
-    if (resData.code != 200) {
-      Toast.Error(resData.message!);
-    } else {
-      Toast.Success(resData.message!);
-    }
-
     return resData;
   }
 
@@ -76,13 +47,6 @@ class NodeApi {
     var res = await DioSingleton.uploadFile(url, filepath,
         filename: filename, options: options);
     var resData = ResMessage.fromJson(res.data);
-
-    if (resData.code != 200) {
-      Toast.Error(resData.message!);
-    } else {
-      Toast.Success(resData.message!);
-    }
-
     return resData;
   }
 }

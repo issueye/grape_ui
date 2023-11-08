@@ -39,7 +39,7 @@ class _PortMainPageState extends State<PortMainPage> {
                             ? AppTheme.lightTextStyle
                             : AppTheme.defaultTextStyle)),
                 Tab(
-                    child: Text('节点管理',
+                    child: Text('页面管理',
                         style: selectTab == 1
                             ? AppTheme.lightTextStyle
                             : AppTheme.defaultTextStyle)),

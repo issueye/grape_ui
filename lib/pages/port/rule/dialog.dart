@@ -32,8 +32,7 @@ class RuleDialog extends StatefulWidget {
 class _RuleDialogState extends State<RuleDialog> {
   final TextEditingController _name = TextEditingController();
   final TextEditingController _port = TextEditingController();
-  final TextEditingController _node = TextEditingController();
-  final TextEditingController _matchType = TextEditingController(text: '完全匹配');
+  final TextEditingController _matchType = TextEditingController(text: 'GIN路由匹配');
   final TextEditingController _target = TextEditingController();
   final TextEditingController _targetRoute = TextEditingController();
   final TextEditingController _method = TextEditingController(text: 'ANY');
@@ -42,6 +41,8 @@ class _RuleDialogState extends State<RuleDialog> {
   late PortStore port;
   late TargetStore target;
   late NodeStore node;
+
+  String _macthNum = '1';
 
   final List<SelectOption> methods = [
     SelectOption('GET', 'GET'),
@@ -53,16 +54,23 @@ class _RuleDialogState extends State<RuleDialog> {
   ];
 
   final List<SelectOption> matchTypes = [
-    SelectOption('0', '完全匹配'),
-    SelectOption('1', '包含匹配'),
-    SelectOption('2', '前缀匹配'),
-    SelectOption('3', '正则匹配'),
-    SelectOption('4', 'GIN路由匹配'),
+    SelectOption('1', 'GIN路由匹配'),
+    SelectOption('2', 'MUX路由匹配'),
   ];
 
   Future<void> _getData() async {
     await target.list();
     await node.list();
+  }
+
+  String findMatchType(String key) {
+    for (var i = 0; i < matchTypes.length; i++) {
+      if (matchTypes[i].key == key) {
+        return matchTypes[i].value;
+      }
+    }
+
+    return '';
   }
 
   @override
@@ -82,12 +90,12 @@ class _RuleDialogState extends State<RuleDialog> {
 
     if (rule.operationType == 1) {
       _name.text = rule.modifyData.name.toString();
-      _node.text = node.getNameById(rule.modifyData.nodeId!);
       _method.text = rule.modifyData.method.toString();
-      _matchType.text = rule.modifyData.matchType.toString();
+      _matchType.text = findMatchType(rule.modifyData.matchType.toString());
       _target.text = target.getNameById(rule.modifyData.targetId!);
       _targetRoute.text = rule.modifyData.targetRoute.toString();
       _mark.text = rule.modifyData.mark.toString();
+      _macthNum = rule.modifyData.matchType.toString();
     }
 
     return Scaffold(
@@ -158,23 +166,14 @@ class _RuleDialogState extends State<RuleDialog> {
                         children: [
                           Expanded(
                             child: formSelectFieldItem(
-                              list,
-                              '节点',
-                              _node,
-                              '请选择节点',
-                              onChanged: (key, value) {
-                                _node.text = value.toString();
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: formSelectFieldItem(
                               matchTypes,
                               '匹配方式',
                               _matchType,
                               '请选择匹配方式',
                               onChanged: (key, value) {
-                                _matchType.text = value.toString();
+                                debugPrint('key = $key value = $value');
+                                _macthNum = value;
+                                _matchType.text = key;
                               },
                               isHaveTo: true,
                             ),
@@ -198,7 +197,7 @@ class _RuleDialogState extends State<RuleDialog> {
                       return formSelectFieldItem(
                           list, '目标地址', _target, '请选择目标地址',
                           onChanged: (key, value) {
-                        _target.text = value.toString();
+                        _target.text = key.toString();
                       }, isHaveTo: true);
                     },
                   ),
@@ -228,12 +227,13 @@ class _RuleDialogState extends State<RuleDialog> {
                         rule.createData.mark = _mark.text;
                         rule.createData.method = _method.text;
                         rule.createData.portId = port.selectData.id;
-                        rule.createData.nodeId = node.getIdByName(_node.text);
+                        rule.createData.nodeId = '';
                         rule.createData.targetId =
                             target.getIdByName(_target.text);
                         rule.createData.targetRoute = _targetRoute.text;
-                        rule.createData.matchType = int.parse(_matchType.text);
-                        await rule.create();
+                        rule.createData.matchType = int.parse(_macthNum);
+                        var isOk = await rule.create();
+                        if (!isOk) return;
                       }
 
                       if (rule.operationType == 1) {
@@ -241,13 +241,14 @@ class _RuleDialogState extends State<RuleDialog> {
                         rule.modifyData.mark = _mark.text;
                         rule.modifyData.method = _method.text;
                         rule.modifyData.portId = port.selectData.id;
-                        rule.modifyData.nodeId = node.getIdByName(_node.text);
+                        rule.modifyData.nodeId = '';
                         rule.modifyData.targetId =
                             target.getIdByName(_target.text);
                         rule.modifyData.targetRoute = _targetRoute.text;
-                        rule.modifyData.matchType = int.parse(_matchType.text);
+                        rule.modifyData.matchType = int.parse(_macthNum);
                         debugPrint('修改信息: ${rule.modifyData}');
-                        await rule.modify();
+                        var isOk = await rule.modify();
+                        if (!isOk) return;
                       }
 
                       await rule.list();

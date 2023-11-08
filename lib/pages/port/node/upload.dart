@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:go_grape_ui/components/custom_toast.dart';
 
 import '../../../api/node.dart';
 import '../../../components/bar_button.dart';
@@ -57,6 +58,12 @@ class _UploadFileState extends State<UploadFile> {
                     'port_id': widget.portId,
                   },
                 );
+
+                if (res.code != 200) {
+                  Toast.Error(res.message.toString());
+                } else {
+                  Toast.Success(res.message.toString());
+                }
               },
             ),
             const SizedBox(width: 30),

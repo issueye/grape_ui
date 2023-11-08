@@ -7,6 +7,7 @@ import 'package:go_grape_ui/store/port_store.dart';
 import 'package:go_grape_ui/utils/app_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../components/custom_button.dart';
 import '../../../components/custom_table.dart';
@@ -33,49 +34,35 @@ class _NodeManaState extends State<NodeMana> {
 
   final List<FieldInfo> fieldList = [
     FieldInfo(title: '名称', name: 'name', width: 100),
-    FieldInfo(
-      title: '类型',
-      name: 'nodeType',
-      width: 80,
-      titleCenter: true,
-      child: (ctx, index, value) {
-        var val = value as int;
-        return Container(
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-          child: Container(
-            width: 50,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(2),
-              color: val == 0
-                  ? AppTheme.successColor.withOpacity(0.8)
-                  : AppTheme.warnColor.withOpacity(0.8),
-            ),
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                val == 0 ? '接口' : '页面',
-                style: AppTheme.sizeTextStyle(10, color: Colors.white),
-              ),
-            ),
-          ),
-        );
-      },
-    ),
-    FieldInfo(title: '目标地址', name: 'target', clip: true),
-    FieldInfo(title: '访问路径', name: 'pagePath', clip: true),
     FieldInfo(title: '备注', name: 'mark'),
     FieldInfo(
       title: '操作',
       name: '操作',
-      width: 100,
+      width: 130,
       titleCenter: true,
       child: (ctx, index, value) {
         var node = Provider.of<NodeStore>(ctx);
         var port = Provider.of<PortStore>(ctx);
         var data = node.data!.data![index];
+
         return Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            BarButton(
+              icon: Resources.jump,
+              tipMessage: '从浏览器打开',
+              onTap: () async {
+                debugPrint(data.toString());
+                var host = await ConfigDB.getStr('server_host');
+                final url = Uri.parse(host);
+                final targetUrl = Uri.parse('http://${url.host}:${port.port}/${data.name.toString()}/web/'); 
+                if (!await launchUrl(targetUrl)) {
+                  throw Exception('无法打开 ${targetUrl.toString()}');
+                }
+                Toast.Success('从浏览器打开成功');
+              },
+            ),
+            const SizedBox(width: 10),
             BarButton(
               icon: Resources.copy,
               tipMessage: '复制',
@@ -83,7 +70,7 @@ class _NodeManaState extends State<NodeMana> {
                 debugPrint(data.toString());
                 var host = await ConfigDB.getStr('server_host');
                 final url = Uri.parse(host);
-                Clipboard.setData(ClipboardData(text: 'http://${url.host}:${port.port}${data.pagePath.toString()}web/'));
+                Clipboard.setData(ClipboardData(text: 'http://${url.host}:${port.port}/${data.name.toString()}/web/'));
                 Toast.Success('复制成功');
               },
             ),
@@ -96,7 +83,7 @@ class _NodeManaState extends State<NodeMana> {
                 node.operationType = 1;
                 debugPrint(data.toString());
                 await GoRouter.of(ctx)
-                    .pushNamed(Routes.nodeFormNamed, extra: '修改节点信息');
+                    .pushNamed(Routes.nodeFormNamed, extra: '修改页面信息');
                 await node.list();
               },
             ),
@@ -151,7 +138,7 @@ class _NodeManaState extends State<NodeMana> {
                 onPressed: () async {
                   node.operationType = 0;
                   GoRouter.of(context)
-                      .pushNamed(Routes.nodeFormNamed, extra: '添加节点信息');
+                      .pushNamed(Routes.nodeFormNamed, extra: '添加页面信息');
                 },
               ),
             ],
