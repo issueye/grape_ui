@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_grape_ui/components/custom_button.dart';
 import 'package:go_grape_ui/components/custom_divider.dart';
@@ -24,8 +25,10 @@ class _ServerSettingsPageState extends State<ServerSettingsPage> {
   }
 
   Future<void> _initConfig() async {
-    var serverHost = await ConfigDB.getStr('server_host');
-    _serverHostController.text = serverHost;
+    if (!kIsWeb) {
+      var serverHost = await ConfigDB.getStr('server_host');
+      _serverHostController.text = serverHost;
+    }
   }
 
   @override
@@ -67,12 +70,14 @@ class _ServerSettingsPageState extends State<ServerSettingsPage> {
             CustomButton(
               name: '确定',
               onPressed: () async {
-                await ConfigDB.setStr(
-                    'server_host', _serverHostController.text);
-                var serverHost = await ConfigDB.getStr('server_host');
-                debugPrint(serverHost);
+                if (!kIsWeb) {
+                  await ConfigDB.setStr(
+                      'server_host', _serverHostController.text);
+                  var serverHost = await ConfigDB.getStr('server_host');
+                  debugPrint(serverHost);
+                }
                 // 设置 dio 的baseUrl
-                DioSingleton.baseUrl = serverHost;
+                DioSingleton.baseUrl = _serverHostController.text;
                 Toast.Success('设置服务器地址成功');
               },
             ),

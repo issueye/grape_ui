@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_grape_ui/api/port.dart';
 import 'package:go_grape_ui/model/port/datum.dart';
 import '../model/port/port_list.dart';
+import '../model/res_message.dart';
 import '../utils/request/services.dart';
 
 class PortStore extends ChangeNotifier {
@@ -82,5 +83,17 @@ class PortStore extends ChangeNotifier {
   Future<void> reload(String id) async {
     if (DioSingleton.baseUrl == '') return;
     await PortApi.reload(id);
+  }
+
+  // 关闭端口监听
+  Future<ResMessage?> stop(String id) async {
+    if (DioSingleton.baseUrl == '') return null;
+    return await PortApi.stop(id);
+  }
+
+  // 开启端口监听
+  Future<ResMessage?> start(String id) async {
+    if (DioSingleton.baseUrl == '') return null;
+    return await PortApi.start(id);
   }
 }

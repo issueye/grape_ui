@@ -11,13 +11,6 @@ class TargetApi {
     var reqData = data.toJson();
     var res = await DioSingleton.postData(url, reqData);
     var resData = ResMessage.fromJson(res.data);
-
-    if (resData.code != 200) {
-      Toast.Error(resData.message!);
-    } else {
-      Toast.Success(resData.message!);
-    }
-
     return resData;
   }
 
@@ -26,13 +19,6 @@ class TargetApi {
     String url = '/api/v1/target';
     var res = await DioSingleton.getData(url, params: params);
     var resData = Target.fromJson(res.data);
-
-    if (resData.code != 200) {
-      Toast.Error(resData.message!);
-    } else {
-      Toast.Success(resData.message!);
-    }
-
     return resData;
   }
 
@@ -41,13 +27,6 @@ class TargetApi {
     String url = '/api/v1/target/$id';
     var res = await DioSingleton.deleteData(url);
     var resData = ResMessage.fromJson(res.data);
-
-    if (resData.code != 200) {
-      Toast.Error(resData.message!);
-    } else {
-      Toast.Success(resData.message!);
-    }
-
     return resData;
   }
 
@@ -57,13 +36,6 @@ class TargetApi {
     var reqData = data.toJson();
     var res = await DioSingleton.putData(url, reqData);
     var resData = ResMessage.fromJson(res.data);
-
-    if (resData.code != 200) {
-      Toast.Error(resData.message!);
-    } else {
-      Toast.Success(resData.message!);
-    }
-
     return resData;
   }
 }

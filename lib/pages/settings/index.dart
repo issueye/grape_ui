@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_grape_ui/pages/settings/server.dart';
 import 'package:go_grape_ui/utils/db/config.dart';
@@ -19,8 +20,10 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _initConfig() async {
-    var serverHost = await ConfigDB.getStr('server_host');
-    _serverHostController.text = serverHost;
+    if (!kIsWeb) {
+      var serverHost = await ConfigDB.getStr('server_host');
+      _serverHostController.text = serverHost;
+    }
   }
 
   @override

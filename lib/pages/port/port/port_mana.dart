@@ -98,8 +98,8 @@ class _PortState extends State<Port> {
               onSelect: () {
                 port.selectIndex = index;
                 port.port = data[index].port!;
-                node.portId = data[index].id!;
-                rule.portId = data[index].id!;
+                node.portId = data[index].id.toString();
+                rule.portId = data[index].id.toString();
               },
             );
           } else {

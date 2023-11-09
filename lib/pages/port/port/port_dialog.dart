@@ -78,8 +78,8 @@ class _PortDialogState extends State<PortDialog> {
             key: _formKey,
             child: Column(
               children: [
-                _item('端口号', _port, '请填写端口号', true),
-                _item('备　注', _mark, '请填写备注', true, lines: 3),
+                formFieldItem('端口号', _port, '请填写端口号', isHaveTo: true),
+                formFieldItem('备　注', _mark, '请填写备注', line: 3),
               ],
             ),
           ),

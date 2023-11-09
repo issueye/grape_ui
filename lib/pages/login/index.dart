@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:go_grape_ui/components/custom_button.dart';
 import 'package:go_grape_ui/components/custom_form_text_field.dart';
 import 'package:go_grape_ui/components/window_button.dart';
@@ -33,7 +34,9 @@ class _LoginPageState extends State<LoginPage> {
               fit: BoxFit.fill,
             ),
             onTapDown: (details) async {
-              await windowManager.startDragging();
+              if (!kIsWeb) {
+                await windowManager.startDragging();
+              }
             },
           ),
           Container(
@@ -55,7 +58,9 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   onTapDown: (details) async {
-                    await windowManager.startDragging();
+                    if (!kIsWeb) {
+                      await windowManager.startDragging();
+                    }
                   },
                 ),
                 const SizedBox(height: 100),
@@ -104,8 +109,10 @@ class _LoginPageState extends State<LoginPage> {
                 CustomButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        await windowManager.setSize(const Size(1280, 750));
-                        await windowManager.center();
+                        if (!kIsWeb) {
+                          await windowManager.setSize(const Size(1280, 750));
+                          await windowManager.center();
+                        }
                         // ignore: use_build_context_synchronously
                         GoRouter.of(context).pushNamed(AppRoutes.homeNamed);
                       }

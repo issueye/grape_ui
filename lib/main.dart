@@ -9,7 +9,7 @@ import 'package:go_grape_ui/store/rule_store.dart';
 import 'package:go_grape_ui/store/target_store.dart';
 import 'package:provider/provider.dart';
 
-void main(List<String> args) async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // 窗体初始化
   await init();

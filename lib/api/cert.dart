@@ -14,13 +14,6 @@ class CertApi {
     debugPrint('reqData = $reqData');
     var res = await DioSingleton.postData(url, reqData);
     var resData = ResMessage.fromJson(res.data);
-
-    if (resData.code != 200) {
-      Toast.Error(resData.message!);
-    } else {
-      Toast.Success(resData.message!);
-    }
-
     return resData;
   }
 
@@ -29,13 +22,6 @@ class CertApi {
     String url = '/api/v1/cert';
     var res = await DioSingleton.getData(url, params: params);
     var resData = Cert.fromJson(res.data);
-
-    if (resData.code != 200) {
-      Toast.Error(resData.message!);
-    } else {
-      Toast.Success(resData.message!);
-    }
-
     return resData;
   }
 
@@ -44,13 +30,6 @@ class CertApi {
     String url = '/api/v1/cert/$id';
     var res = await DioSingleton.deleteData(url);
     var resData = ResMessage.fromJson(res.data);
-
-    if (resData.code != 200) {
-      Toast.Error(resData.message!);
-    } else {
-      Toast.Success(resData.message!);
-    }
-
     return resData;
   }
 
@@ -60,13 +39,6 @@ class CertApi {
     var reqData = data.toJson();
     var res = await DioSingleton.putData(url, reqData);
     var resData = ResMessage.fromJson(res.data);
-
-    if (resData.code != 200) {
-      Toast.Error(resData.message!);
-    } else {
-      Toast.Success(resData.message!);
-    }
-
     return resData;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:go_grape_ui/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -96,10 +97,11 @@ class _LogoutButtonState extends State<LogoutButton> {
       tips: '退出登录',
       onTap: () async {
         // ignore: use_build_context_synchronously
-        // GoRouter.of(context).pushReplacementNamed(AppRoutes.loginNamed);
         GoRouter.of(context).pop();
-        await windowManager.setSize(const Size(800, 500));
-        await windowManager.center();
+        if (!kIsWeb) {
+          await windowManager.setSize(const Size(800, 500));
+          await windowManager.center();
+        }
       },
     );
   }

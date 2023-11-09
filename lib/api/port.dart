@@ -27,12 +27,6 @@ class PortApi {
     String url = '/api/v1/port';
     var res = await DioSingleton.getData(url, params: params);
     var resData = PortList.fromJson(res.data);
-    if (resData.code != 200) {
-      Toast.Error(resData.message!);
-    } else {
-      Toast.Success(resData.message!);
-    }
-
     return resData;
   }
 
@@ -41,13 +35,6 @@ class PortApi {
     String url = '/api/v1/port/$id';
     var res = await DioSingleton.deleteData(url);
     var resData = ResMessage.fromJson(res.data);
-
-    if (resData.code != 200) {
-      Toast.Error(resData.message!);
-    } else {
-      Toast.Success(resData.message!);
-    }
-
     return resData;
   }
 
@@ -87,13 +74,22 @@ class PortApi {
     String url = '/api/v1/port/reload/$id';
     var res = await DioSingleton.putData(url, null);
     var resData = ResMessage.fromJson(res.data);
+    return resData;
+  }
 
-    if (resData.code != 200) {
-      Toast.Error(resData.message!);
-    } else {
-      Toast.Success(resData.message!);
-    }
+  // 关闭
+  static Future<ResMessage> stop(String id) async {
+    String url = '/api/v1/port/stop/$id';
+    var res = await DioSingleton.putData(url, null);
+    var resData = ResMessage.fromJson(res.data);
+    return resData;
+  }
 
+  // 开启
+  static Future<ResMessage> start(String id) async {
+    String url = '/api/v1/port/start/$id';
+    var res = await DioSingleton.putData(url, null);
+    var resData = ResMessage.fromJson(res.data);
     return resData;
   }
 }

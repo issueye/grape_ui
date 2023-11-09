@@ -13,7 +13,6 @@ import 'package:go_grape_ui/utils/app_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../../components/custom_select.dart';
 import '../../../model/res_message.dart';
 
 // ignore: must_be_immutable
