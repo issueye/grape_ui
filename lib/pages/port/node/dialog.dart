@@ -137,11 +137,11 @@ class _NodeDialogState extends State<NodeDialog> {
                       }
 
                       if (res!.code != 200) {
-                          Toast.Error(res.message.toString());
-                          return;
-                        } else {
-                          Toast.Error(res.message.toString());
-                        }
+                        Toast.Error(res.message.toString());
+                        return;
+                      } else {
+                        Toast.Success(res.message.toString());
+                      }
 
                       await node.list();
                       // ignore: use_build_context_synchronously
@@ -176,10 +176,12 @@ class _NodeDialogState extends State<NodeDialog> {
         ),
         const SizedBox(width: 15),
         // 上传
-        UploadFile(
-          controller: _pagePath,
-          portId: node.portId,
-          nodeId: node.modifyData.id!,
+        Expanded(
+          child: UploadFile(
+            controller: _pagePath,
+            portId: node.portId,
+            nodeId: node.modifyData.id!,
+          ),
         ),
       ],
     );

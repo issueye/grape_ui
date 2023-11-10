@@ -9,7 +9,11 @@ import '../../../utils/app_theme.dart';
 
 // ignore: must_be_immutable
 class UploadFile extends StatefulWidget {
-  UploadFile({super.key, required this.controller, required this.nodeId, required this.portId});
+  UploadFile(
+      {super.key,
+      required this.controller,
+      required this.nodeId,
+      required this.portId});
   final TextEditingController controller;
   String nodeId;
   String portId;
@@ -69,27 +73,38 @@ class _UploadFileState extends State<UploadFile> {
             const SizedBox(width: 30),
           ],
         ),
-        Tooltip(
-          preferBelow: false,
-          verticalOffset: 8,
-          message: widget.controller.text,
-          child: Text(
-            widget.controller.text,
-            overflow: TextOverflow.ellipsis,
-            style: AppTheme.sizeTextStyle(11, color: AppTheme.dangerColor),
+        Expanded(
+          child: Row(
+            children: [
+              Expanded(
+                child: Tooltip(
+                  preferBelow: false,
+                  verticalOffset: 8,
+                  message: widget.controller.text,
+                  child: Text(
+                    widget.controller.text,
+                    overflow: TextOverflow.ellipsis,
+                    style:
+                        AppTheme.sizeTextStyle(11, color: AppTheme.dangerColor),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 20),
+              widget.controller.text != ''
+                  ? BarButton(
+                      icon: Resources.cancel2(
+                          color: AppTheme.dangerColor, size: 11),
+                      onTap: () {
+                        setState(() {
+                          widget.controller.clear();
+                        });
+                      },
+                    )
+                  : Container(),
+              const Spacer(),
+            ],
           ),
         ),
-        const SizedBox(width: 20),
-        widget.controller.text != ''
-            ? BarButton(
-                icon: Resources.cancel2(color: AppTheme.dangerColor, size: 11),
-                onTap: () {
-                  setState(() {
-                    widget.controller.clear();
-                  });
-                },
-              )
-            : Container(),
       ],
     );
   }
